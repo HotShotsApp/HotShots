@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/SecondFragment"
+        android:icon="@drawable/ic_person_wb"
+        android:title="@string/profile_page" />
+
+    <item
+        android:id="@+id/FirstFragment"
+        android:icon="@drawable/ic_home_wb"
+        android:title="@string/main_page" />
+
+    <item
+        android:icon="@drawable/ic_star_wb"
+        android:title="@string/influencers_page" />
+
+    <item
+        android:id="@+id/CreateLinkFragment"
+        android:icon="@drawable/ic_link_wb"
+        android:title="Linki"/>
+</menu>

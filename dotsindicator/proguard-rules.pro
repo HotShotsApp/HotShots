@@ -1,0 +1,3 @@
+-keep class de.dlyt.yanndroid.oneui.** { *; }
+-keep class androidx.appcompat.widget.Sesl** { *; }
+-keep class android.view.WindowInsetsController { *; }

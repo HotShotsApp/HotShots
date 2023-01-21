@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="user_default">@color/material_dynamic_primary60</color>
+    <color name="user_premium">#cc06a8</color>
+    <color name="user_moderator_top">#2ff525</color>
+    <color name="user_moderator_bottom">#0a7a04</color>
+    <color name="user_administrator">#dff728</color>
+</resources>

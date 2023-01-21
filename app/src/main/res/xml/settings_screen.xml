@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Bezpieczeństwo">
+        <SwitchPreference
+            android:key="isPinEnabled"
+            android:icon="@drawable/ic_pin_24_wb"
+            android:title="Blokada PIN"
+            android:summary="Wymagaj podania hasła PIN przy włączaniu aplikacji."
+            android:defaultValue="false" />
+
+        <Preference
+            android:key="passwordChange"
+            android:icon="@drawable/ic_lock_20px_wb"
+            android:title="Zmień hasło"
+            android:summary="Zmień hasło do swojego konta." />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Odnośniki">
+        <CheckBoxPreference
+            android:icon="@drawable/ic_smart_autocomplete_24_wb"
+            android:title="Automatyczny tytuł"
+            android:summary="Automatycznie uzupełnij tytuł, wpisując tytuł strony."
+            android:defaultValue="true"
+            android:key="isLinkTitleAutoCompleteEnabled"/>
+    </PreferenceCategory>
+</PreferenceScreen>

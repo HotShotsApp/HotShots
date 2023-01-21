@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/FirstFragment">
+
+    <fragment
+        android:id="@+id/FirstFragment"
+        android:name="tw.app.hotshots.fragment.HomeFragment"
+        android:label="Główna"
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment"
+            app:enterAnim="@anim/enter_fade_out_fly_up"
+            app:exitAnim="@anim/exit_fade_in_fly_down" />
+        <action
+            android:id="@+id/action_FirstFragment_to_createLinkFragment"
+            app:destination="@id/CreateLinkFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/SecondFragment"
+        android:name="tw.app.hotshots.fragment.ProfileFragment"
+        android:label="Profil"
+        tools:layout="@layout/fragment_profile">
+
+        <action
+            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment"
+            app:enterAnim="@anim/enter_fade_out_fly_up"
+            app:exitAnim="@anim/exit_fade_in_fly_down" />
+    </fragment>
+    <fragment
+        android:id="@+id/CreateLinkFragment"
+        android:name="tw.app.hotshots.fragment.link_manager.CreateLinkFragment"
+        android:label="Odnośniki">
+        <action
+            android:id="@+id/action_createLinkFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+        <action
+            android:id="@+id/action_createLinkFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
+    </fragment>
+</navigation>

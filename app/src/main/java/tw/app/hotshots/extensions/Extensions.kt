@@ -1,0 +1,41 @@
+package tw.app.hotshots.extensions
+
+import `in`.aabhasjindal.otptextview.OtpTextView
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import androidx.core.content.ContextCompat.getSystemService
+
+
+
+
+class Extensions {
+
+}
+
+/**
+ * Input View's
+ */
+fun OtpTextView.hideKeyboard() {
+    clearFocus()
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(getWindowToken(), 0)
+}
+
+fun OtpTextView.showKeyboard() {
+    requestFocusOTP()
+    /*val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+    imm!!.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)*/
+}
+
+fun EditText.hideKeyboard() {
+    clearFocus()
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(getWindowToken(), 0)
+}
+
+fun EditText.showKeyboard() {
+    requestFocus()
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+    imm!!.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+}
