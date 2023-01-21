@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory android:title="Wyświetlanie">
+        <SwitchPreferenceCompat
+            android:key="isPrivateViewEnabled"
+            android:icon="@drawable/ic_private_image_wb"
+            android:title="Ukryj obrazy postów"
+            android:summary="Ukryj obrazy podczas przeglądania wszystkich postów. (Wymaga restartu)"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="Bezpieczeństwo">
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="isPinEnabled"
             android:icon="@drawable/ic_pin_24_wb"
             android:title="Blokada PIN"
@@ -23,5 +32,12 @@
             android:summary="Automatycznie uzupełnij tytuł, wpisując tytuł strony."
             android:defaultValue="true"
             android:key="isLinkTitleAutoCompleteEnabled"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Konto">
+        <Preference
+            android:key="logoutButton"
+            android:icon="@drawable/ic_logout_24_wb"
+            android:title="Wyloguj się" />
     </PreferenceCategory>
 </PreferenceScreen>

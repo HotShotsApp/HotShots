@@ -11,9 +11,14 @@ class Settings(context: Context) {
     private val editor: SharedPreferences.Editor = preferences.edit()
 
     private val IS_LINK_TITLE_AUTO_COMPLETE_ENABLED = "isLinkTitleAutoCompleteEnabled"
+    private val IS_PRIVATE_VIEW_ENABLED = "isPrivateViewEnabled"
 
     fun isLinkTitleAutoCompleteEnabled(): Boolean {
         return getBoolean(IS_LINK_TITLE_AUTO_COMPLETE_ENABLED)
+    }
+
+    fun isPrivateViewEnabled(): Boolean {
+        return getBoolean(IS_PRIVATE_VIEW_ENABLED)
     }
 
     private fun getBoolean(key: String): Boolean {

@@ -13,5 +13,11 @@ class SettingsActivity : AppCompatActivity() {
 
         _binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setSupportActionBar(binding.toolbar)
+
+        binding.toolbar.setNavigationOnClickListener {
+            finish()
+        }
     }
 }
