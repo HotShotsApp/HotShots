@@ -17,7 +17,7 @@ class LinksAdapter(
     private var context: Context,
     private var editLinkListener: EditLinkListener // To Listen for changes in CreateLinkFragment
 ) : RecyclerView.Adapter<LinksAdapter.ViewHolder>() {
-
+    private var listener: LinkClickListener? = null
     inner class ViewHolder(val binding: ItemLinkBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LinksAdapter.ViewHolder {
@@ -35,6 +35,12 @@ class LinksAdapter(
         binding.editButton.setOnClickListener {
             var editLinkDialog = EditLinkDialog(context, link, editLinkListener)
             editLinkDialog.show()
+        }
+
+        binding.root.setOnClickListener {
+            if (listener != null) {
+                listener?.onClicked(link)
+            }
         }
     }
 
@@ -65,4 +71,17 @@ class LinksAdapter(
     fun getLink(position: Int): Link {
         return mData[position]
     }
+
+    fun setList(list: MutableList<Link>) {
+        mData = list
+        notifyDataSetChanged()
+    }
+
+    fun setOnClickListener(_listener: LinkClickListener) {
+        listener = _listener
+    }
+}
+
+interface LinkClickListener {
+    fun onClicked(link: Link)
 }

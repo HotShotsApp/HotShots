@@ -2,10 +2,16 @@ package tw.app.hotshots.activity
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.navigation.findNavController
@@ -13,19 +19,36 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageView
+import com.canhub.cropper.options
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.torrydo.floatingbubbleview.FloatingBubbleService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import tw.app.hotshots.R
 import tw.app.hotshots.activity.debug.DebugService
 import tw.app.hotshots.activity.posts.CreatePostActivity
+import tw.app.hotshots.database.posts.user.UserSingleton
 import tw.app.hotshots.databinding.ActivityMainBinding
 import tw.app.hotshots.databinding.ContentMainBinding
 import tw.app.hotshots.settings.SettingsActivity
+import tw.app.hotshots.storage.Upload
+import tw.app.hotshots.storage.UploadListener
 import tw.app.hotshots.ui.link.CreateLinkDialog
 import tw.app.hotshots.ui.link.CreateLinkDialog.Companion.CreateLinkDialogListener
 import tw.app.hotshots.ui.loading.LoadingDialog
+import kotlin.coroutines.CoroutineContext
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CoroutineScope {
+    /* ------------------------------------------ */
+    private var job: Job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.IO + job
+    /* ------------------------------------------ */
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -36,6 +59,52 @@ class MainActivity : AppCompatActivity() {
     private lateinit var loadingDialog: LoadingDialog
     private var createLinkDialog: CreateLinkDialog? = null
     private var createLinkListener: CreateLinkDialogListener? = null
+
+    // Avatar Picker
+    var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
+    private var listenerAvatar: AvatarPickerListener? = null
+    private val uriPermissionFlag = Intent.FLAG_GRANT_READ_URI_PERMISSION
+
+    private val cropImage = registerForActivityResult(CropImageContract()) { result ->
+        if (result.isSuccessful) {
+            var bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), result.uriContent);
+
+            listenerAvatar!!.onCropped(bitmap)
+
+            launch {
+                Upload().Bitmap(
+                    bitmap,
+                    object : UploadListener {
+                        override fun onUploaded(fileUrl: String) {
+                            listenerAvatar!!.onUploaded(fileUrl)
+                        }
+
+                        override fun onError(reason: String) {
+                            listenerAvatar!!.onUploadError(reason)
+                        }
+                    }
+                )
+            }
+        } else {
+            listenerAvatar!!.onUploadError(result.error?.message!!)
+        }
+    }
+
+    init {
+        pickMedia =
+            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+                contentResolver.takePersistableUriPermission(uri!!, uriPermissionFlag)
+
+                //val imagePath: String? = UriUtil(context).getPath(uri)
+
+                cropImage.launch(
+                    options(uri = uri) {
+                        setGuidelines(CropImageView.Guidelines.ON)
+                        setOutputCompressFormat(Bitmap.CompressFormat.PNG)
+                    }
+                )
+            }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -109,10 +178,24 @@ class MainActivity : AppCompatActivity() {
         loadingDialog.setIndeterminate(true)
     }
 
-    fun toggleLoading(on: Boolean) {
+    fun toggleLoading(on: Boolean): LoadingDialog {
         if (on)
             loadingDialog.show()
         else
             loadingDialog.dismiss()
+
+        return loadingDialog
     }
+
+    fun setAvatarPickerListener(_listener: AvatarPickerListener) {
+        listenerAvatar = _listener
+    }
+}
+
+interface AvatarPickerListener {
+    fun onCropped(croppedBitmap: Bitmap) {}
+
+    fun onUploaded(fileUrl: String) {}
+
+    fun onUploadError(error: String) {}
 }

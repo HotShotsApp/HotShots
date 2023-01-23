@@ -16,6 +16,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.app.hotshots.activity.MainActivity
 import tw.app.hotshots.adapter.recyclerview.PostsAdapter
+import tw.app.hotshots.authentication.model.User
 import tw.app.hotshots.database.posts.GetPosts
 import tw.app.hotshots.database.posts.GetPostsSettings
 import tw.app.hotshots.database.posts.PostsListener
@@ -24,6 +25,8 @@ import tw.app.hotshots.databinding.FragmentProfileBinding
 import tw.app.hotshots.logger.LogType
 import tw.app.hotshots.logger.Logger
 import tw.app.hotshots.model.main.Post
+import tw.app.hotshots.ui.profile.EditProfileDialog
+import tw.app.hotshots.ui.profile.EditProfileListener
 import kotlin.coroutines.CoroutineContext
 import tw.app.hotshots.R.string as AppString
 
@@ -47,6 +50,8 @@ class ProfileFragment : Fragment(), CoroutineScope {
 
     private var _binding: FragmentProfileBinding? = null
     private var onTabSelectedListener: OnTabSelectedListener? = null
+
+    private var editProfileDialog: EditProfileDialog? = null
 
     private lateinit var mainActivity: MainActivity
 
@@ -88,6 +93,8 @@ class ProfileFragment : Fragment(), CoroutineScope {
     }
 
     private fun setup() {
+        setupEditProfileDialog()
+
         val currentUser = UserSingleton.instance?.user!!
 
         binding.profileUsernameText.text = currentUser.name
@@ -98,6 +105,19 @@ class ProfileFragment : Fragment(), CoroutineScope {
 
         binding.profileAvatarView.setAvatarFromUrl(currentUser.avatar)
         binding.profileAvatarView.setAvatarLevel(currentUser.accountType)
+
+        binding.profileEditButton.setOnClickListener {
+            editProfileDialog!!.show()
+        }
+    }
+
+    private fun setupEditProfileDialog() {
+        editProfileDialog = EditProfileDialog(requireContext(), activity as MainActivity, object : EditProfileListener {
+            override fun onEdited(user: User) {
+                binding.profileAvatarView.setAvatarFromUrl(user.avatar)
+                binding.profileDescriptionText.text = user.description
+            }
+        })
     }
 
     /**

@@ -21,14 +21,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.HotShots"
+        android:theme="@style/HotShots.ActionBar"
         tools:targetApi="31">
 
         <service android:name=".activity.debug.DebugService" />
 
         <activity
             android:name=".activity.SplashActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.HotShots">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,11 +40,27 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity android:name=".activity.auth.UnlockActivity" />
-        <activity android:name=".activity.auth.AuthActivity" />
-        <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.posts.CreatePostActivity" />
-        <activity android:name=".activity.debug.DebugActivity" />
-        <activity android:name=".settings.SettingsActivity" />
+        <activity
+            android:name=".activity.auth.UnlockActivity"
+            android:theme="@style/Theme.HotShots" />
+        <activity
+            android:name=".activity.auth.AuthActivity"
+            android:theme="@style/Theme.HotShots" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:theme="@style/Theme.HotShots" />
+        <activity
+            android:name=".activity.posts.CreatePostActivity"
+            android:theme="@style/Theme.HotShots" />
+        <activity
+            android:name=".activity.debug.DebugActivity"
+            android:theme="@style/Theme.HotShots" />
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:theme="@style/Theme.HotShots" />
+        <activity
+            android:name=".activity.browser.BrowserActivity"
+            android:theme="@style/Theme.HotShots"
+            android:configChanges="orientation|screenSize"/>
     </application>
 </manifest>

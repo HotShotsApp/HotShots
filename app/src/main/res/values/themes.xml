@@ -5,5 +5,10 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
+    <style name="HotShots.ActionBar" parent="Theme.Material3.DayNight">
+
+
+    </style>
+
     <style name="Theme.HotShots" parent="Base.Theme.HotShots" />
 </resources>

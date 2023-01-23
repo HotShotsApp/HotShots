@@ -13,11 +13,11 @@ object Vibrate {
                 val vibratorManager =
                     ctx.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
                 val vibrator = vibratorManager.defaultVibrator
-                vibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK))
+                vibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_DOUBLE_CLICK))
             } else {
                 val v = ctx.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    v.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK))
+                    v.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_DOUBLE_CLICK))
                 } else {
                     v.vibrate(150L)
                 }

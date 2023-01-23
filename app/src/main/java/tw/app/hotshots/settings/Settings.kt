@@ -12,17 +12,29 @@ class Settings(context: Context) {
 
     private val IS_LINK_TITLE_AUTO_COMPLETE_ENABLED = "isLinkTitleAutoCompleteEnabled"
     private val IS_PRIVATE_VIEW_ENABLED = "isPrivateViewEnabled"
+    private val IS_WARNING_ABOUT_IN_APP_BROWSER_READED = "isWarningAboutInAppBrowserReaded"
 
     fun isLinkTitleAutoCompleteEnabled(): Boolean {
-        return getBoolean(IS_LINK_TITLE_AUTO_COMPLETE_ENABLED)
+        return getBoolean(IS_LINK_TITLE_AUTO_COMPLETE_ENABLED, true)
     }
 
     fun isPrivateViewEnabled(): Boolean {
-        return getBoolean(IS_PRIVATE_VIEW_ENABLED)
+        return getBoolean(IS_PRIVATE_VIEW_ENABLED, false)
     }
 
-    private fun getBoolean(key: String): Boolean {
-        return preferences.getBoolean(key, true)
+    fun isWarningAboutInAppBrowserReaded(): Boolean {
+        val value = getBoolean(IS_WARNING_ABOUT_IN_APP_BROWSER_READED, false)
+        if (!value) setBoolean(IS_WARNING_ABOUT_IN_APP_BROWSER_READED, true)
+
+        return value
+    }
+
+    private fun getBoolean(key: String, defValue: Boolean): Boolean {
+        return preferences.getBoolean(key, defValue)
+    }
+
+    private fun setBoolean(key: String, value: Boolean) {
+        editor.putBoolean(key, value).apply()
     }
 
     companion object {
@@ -30,7 +42,7 @@ class Settings(context: Context) {
 
         val getInstance: Settings
             get() {
-                return Settings.settings!!
+                return settings!!
             }
 
         fun initialize(context: Context) {

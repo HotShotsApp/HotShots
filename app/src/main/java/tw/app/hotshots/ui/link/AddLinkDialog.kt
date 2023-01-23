@@ -83,6 +83,14 @@ class AddLinkDialog(
         }
     }
 
+    fun setUrl(url: String) {
+        binding.urlEditText.setText(url)
+    }
+
+    fun setTitle(title: String) {
+        binding.titleEditText.setText(title)
+    }
+
     override fun dismiss() {
         binding.urlEditText.setText("")
         binding.titleEditText.setText("")

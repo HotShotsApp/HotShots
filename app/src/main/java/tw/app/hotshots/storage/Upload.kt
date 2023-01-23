@@ -1,21 +1,45 @@
 package tw.app.hotshots.storage
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
-import tw.app.hotshots.R
-import tw.app.hotshots.util.UriUtil
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import tw.app.hotshots.util.UidGenerator
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 
 
 class Upload {
+    suspend fun Bitmap(
+        bitmapImage: Bitmap,
+        listener: UploadListener
+    ) {
+        val baos = ByteArrayOutputStream()
+        bitmapImage.compress(Bitmap.CompressFormat.JPEG, 80, baos)
+        val data: ByteArray = baos.toByteArray()
+
+        val storage = FirebaseStorage.getInstance("gs://walkboner-72c59.appspot.com")
+        val storageRef = storage.reference
+        val mountainsRef = storageRef.child("avatars/" + UidGenerator.Generate(12) + ".png")
+
+        val uploadTask: UploadTask = mountainsRef.putBytes(data)
+        uploadTask.addOnFailureListener {
+            listener.onError(it.message.toString())
+        }
+            .addOnSuccessListener { taskSnapshot ->
+                mountainsRef.downloadUrl.addOnSuccessListener {
+                    listener.onUploaded(it.toString())
+                }
+            }.await()
+    }
+
     suspend fun Image(
         storagePath: String,
         imagePaths: MutableList<String>,
@@ -46,7 +70,8 @@ class Upload {
                 return
             }
 
-            val fileExtension: String = imagePath.toString().substring(imagePath.toString().lastIndexOf("."))
+            val fileExtension: String =
+                imagePath.toString().substring(imagePath.toString().lastIndexOf("."))
 
             val storage = FirebaseStorage.getInstance("gs://walkboner-72c59.appspot.com")
             val storageRef = storage.reference
@@ -78,13 +103,13 @@ class Upload {
 }
 
 interface UploadListener {
-    fun onUploaded(fileUrl: String)
+    fun onUploaded(fileUrl: String) {}
 
-    fun onFinished()
+    fun onFinished() {}
 
-    fun progress(progress: Int)
+    fun progress(progress: Int) {}
 
-    fun onFileChanged(currentPosition: Int, size: Int)
+    fun onFileChanged(currentPosition: Int, size: Int) {}
 
-    fun onError(reason: String)
+    fun onError(reason: String) {}
 }

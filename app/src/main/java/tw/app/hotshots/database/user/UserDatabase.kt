@@ -23,6 +23,16 @@ class UserDatabase(
         togglePin(true)
     }
 
+    suspend fun changeDescription(description: String) {
+        user.description = description
+        save()
+    }
+
+    suspend fun changeAvatar(avatar: String) {
+        user.avatar = avatar
+        save()
+    }
+
     private suspend fun save() {
         database.set(user)
             .addOnSuccessListener {
