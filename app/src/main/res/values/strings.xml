@@ -4,6 +4,21 @@
 
     <string name="database_url">https://walkboner-72c59-default-rtdb.europe-west1.firebasedatabase.app/</string>
 
+    <!-- NOTICE DIALOG STARTUP -->
+    <string name="notice_dialog_startup_title">Uwaga</string>
+    <string name="notice_dialog_startup_message">Aplikacja jest nadal we wczesnej wersji i może zawierać błędy.\nJeśli możesz, zgłaszaj je na serwerze discord.\n\nAplikacja jest otwartoźródłowa i jej kod znajduje się na serwisie GitHub - pobieraj HotShots tylko z oficjalnych źródeł!</string>
+    <string name="notice_dialog_startup_positive_button">Okej</string>
+
+    <!-- BANNED DIALOG -->
+    <string name="banned_dialog_title">Konto zbanowane</string>
+    <string name="banned_dialog_message">Twoje konto zostało zbanowane!\n\nPowód:\n</string>
+    <string name="banned_dialog_positive_button">Zamknij</string>
+
+    <!-- UNBANNED DIALOG -->
+    <string name="unbanned_dialog_title">Konto odbanowane</string>
+    <string name="unbanned_dialog_message">Twoje konto zostało odbanowane.\nMiej się na baczności!</string>
+    <string name="unbanned_dialog_positive_button">Okej</string>
+
     <!-- PAGES -->
     <string name="profile_page">Profil</string>
     <string name="main_page">Główna</string>

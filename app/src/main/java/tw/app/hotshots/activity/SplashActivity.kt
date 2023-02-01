@@ -1,14 +1,11 @@
 package tw.app.hotshots.activity
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,14 +14,15 @@ import kotlinx.coroutines.launch
 import tw.app.hotshots.BuildConfig
 import tw.app.hotshots.activity.auth.AuthActivity
 import tw.app.hotshots.activity.auth.UnlockActivity
-import tw.app.hotshots.activity.debug.DebugService
 import tw.app.hotshots.authentication.Authentication
 import tw.app.hotshots.authentication.AuthenticationListener
 import tw.app.hotshots.authentication.model.User
 import tw.app.hotshots.databinding.ActivitySplashBinding
-import tw.app.hotshots.encryption.Encrypt
 import tw.app.hotshots.logger.LogType
 import tw.app.hotshots.logger.Logger
+import tw.app.hotshots.settings.Settings
+import tw.app.hotshots.util.TimeUtil
+import tw.app.hotshots.R.string as AppString
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
@@ -42,9 +40,27 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
     private var _binding: ActivitySplashBinding? = null
     private val binding get() = _binding!!
 
-    private var authentication: Authentication? = null
-    private var authenticationListener: AuthenticationListener? = null
+    private var _authentication: Authentication? = null
+    private val authentication get() = _authentication!!
 
+    private var _authenticationListener: AuthenticationListener? = null
+    private val authenticationListener get() = _authenticationListener!!
+
+    private var _noticeDialog: MaterialAlertDialogBuilder? = null
+    private val noticeDialog get() = _noticeDialog!!
+
+    private var _bannedDialog: MaterialAlertDialogBuilder? = null
+    private val bannedDialog get() = _bannedDialog!!
+
+    private var _unbannedDialog: MaterialAlertDialogBuilder? = null
+    private val unbannedDialog get() = _unbannedDialog!!
+
+    private var _settings: Settings? = null
+    private val settings get() = _settings!!
+
+    // For buildDialogs()
+    private var bannedMessage = ""
+    private var isPinRequired = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -64,12 +80,29 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private fun initialize() {
-        authenticationListener = object : AuthenticationListener {
+        buildDialogs()
+
+        _authenticationListener = object : AuthenticationListener {
             override fun onUserAlreadyLogged(user: User) {
                 super.onUserAlreadyLogged(user)
 
                 Log.d(TAG, "onUserAlreadyLogged: ispinenabled: ${user.isPinEnabled}")
-                
+
+                isPinRequired = user.isPinEnabled
+
+                if (user.isBanned) {
+                    if (user.bannedTo > TimeUtil.currentTimeToLong()) { // Is still banned
+                        bannedMessage = getString(AppString.banned_dialog_message) +
+                                user.banReason + "\n\n" + "Zakończy się dnia:\n" +
+                                TimeUtil.convertLongToTime(user.bannedTo)
+                        bannedDialog.show()
+                    } else if (user.bannedTo <= TimeUtil.currentTimeToLong()) {
+                        unbannedDialog.show()
+                    }
+
+                    return
+                }
+
                 if (user.isPinEnabled) {
                     moveToUnlock()
                 } else {
@@ -80,7 +113,11 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
             override fun onUserAuthenticationNeeded() {
                 super.onUserAuthenticationNeeded()
 
-                moveToAuth()
+                if (settings.isUserFirstRun()) {
+                    noticeDialog.show()
+                } else {
+                    moveToAuth()
+                }
             }
 
             override fun onError(e: Exception) {
@@ -90,13 +127,13 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
             }
         }
 
-        authentication = Authentication(authenticationListener)
+        _authentication = Authentication(authenticationListener)
         launch {
             Logger.log(
                 "$TAG | Started Authentication Initialize",
                 LogType.NORMAL
             )
-            authentication?.initialize()
+            authentication.initialize()
         }
 
         Logger.log(
@@ -118,6 +155,47 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
             "$TAG | Setup",
             LogType.NORMAL
         )
+    }
+
+    private fun buildDialogs() {
+        // Notice Dialog
+        _noticeDialog = MaterialAlertDialogBuilder(this@SplashActivity)
+        noticeDialog.setTitle(getString(AppString.notice_dialog_startup_title))
+        noticeDialog.setMessage(getString(AppString.notice_dialog_startup_message))
+        noticeDialog.setPositiveButton(getString(AppString.notice_dialog_startup_positive_button)) { _, _ ->
+            moveToAuth()
+        }
+        noticeDialog.setOnDismissListener {
+            moveToAuth()
+        }
+
+        // Banned Dialog
+        _bannedDialog = MaterialAlertDialogBuilder(this@SplashActivity)
+        bannedDialog.setTitle(getString(AppString.banned_dialog_title))
+        bannedDialog.setMessage(bannedMessage)
+        bannedDialog.setPositiveButton(getString(AppString.banned_dialog_positive_button)) { _, _ ->
+            finishAffinity()
+        }
+        bannedDialog.setOnDismissListener {
+            finishAffinity()
+        }
+
+        // Unbanned Dialog
+        _unbannedDialog = MaterialAlertDialogBuilder(this@SplashActivity)
+        unbannedDialog.setTitle(getString(AppString.unbanned_dialog_title))
+        unbannedDialog.setMessage(getString(AppString.unbanned_dialog_message))
+        unbannedDialog.setPositiveButton(getString(AppString.unbanned_dialog_positive_button)) { _, _ ->
+            if (isPinRequired)
+                moveToUnlock()
+            else
+                moveToHome()
+        }
+        unbannedDialog.setOnDismissListener {
+            if (isPinRequired)
+                moveToUnlock()
+            else
+                moveToHome()
+        }
     }
 
     private fun showError(message: String) {
@@ -154,6 +232,12 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
     override fun onDestroy() {
         super.onDestroy()
 
+        _noticeDialog = null
+        _bannedDialog = null
+        _unbannedDialog = null
+        _settings = null
         _binding = null
+        _authentication = null
+        _authenticationListener = null
     }
 }
