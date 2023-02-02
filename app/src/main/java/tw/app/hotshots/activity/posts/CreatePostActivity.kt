@@ -17,7 +17,7 @@ import tw.app.hotshots.adapter.recyclerview.MediaPickerAdapter
 import tw.app.hotshots.adapter.recyclerview.MediaPickerListener
 import tw.app.hotshots.database.posts.AddPost
 import tw.app.hotshots.database.posts.AddPostListener
-import tw.app.hotshots.database.posts.user.UserSingleton
+import tw.app.hotshots.database.user.UserSingleton
 import tw.app.hotshots.databinding.ActivityCreatePostBinding
 import tw.app.hotshots.model.main.Post
 import tw.app.hotshots.model.media.Image

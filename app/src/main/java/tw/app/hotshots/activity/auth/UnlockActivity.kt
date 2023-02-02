@@ -3,12 +3,11 @@ package tw.app.hotshots.activity.auth
 import `in`.aabhasjindal.otptextview.OTPListener
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import tw.app.hotshots.activity.MainActivity
-import tw.app.hotshots.database.posts.user.UserSingleton
+import tw.app.hotshots.database.user.UserSingleton
 import tw.app.hotshots.databinding.ActivityUnlockBinding
 import tw.app.hotshots.encryption.Encrypt
 import tw.app.hotshots.extensions.hideKeyboard

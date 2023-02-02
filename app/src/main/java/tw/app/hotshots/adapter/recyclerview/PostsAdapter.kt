@@ -16,13 +16,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yy.mobile.rollingtextview.CharOrder
 import com.yy.mobile.rollingtextview.strategy.Direction
 import com.yy.mobile.rollingtextview.strategy.Strategy.CarryBitAnimation
-import kotlinx.coroutines.CoroutineScope
 import tw.app.hotshots.R
 import tw.app.hotshots.adapter.viewpager.post.PostImagesAdapter
 import tw.app.hotshots.database.posts.PostLikes
 import tw.app.hotshots.database.posts.RemovePost
 import tw.app.hotshots.database.posts.RemovePostListener
-import tw.app.hotshots.database.posts.user.UserSingleton
+import tw.app.hotshots.database.user.UserSingleton
 import tw.app.hotshots.databinding.ItemPostBinding
 import tw.app.hotshots.model.main.Post
 

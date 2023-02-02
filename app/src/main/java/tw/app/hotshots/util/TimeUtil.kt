@@ -4,6 +4,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object TimeUtil {
+
+    val ONE_SECOND = 1000L;
+    val TEN_SECONDS = 10000L;
+
     fun convertLongToTime(time: Long): String {
         val date = Date(time)
         val format = SimpleDateFormat("HH:mm dd/MM/yyyy", Locale.getDefault())

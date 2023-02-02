@@ -1,4 +1,4 @@
-package tw.app.hotshots.database.posts.user
+package tw.app.hotshots.database.user
 
 import tw.app.hotshots.authentication.model.User
 

@@ -40,4 +40,12 @@
             android:icon="@drawable/ic_logout_24_wb"
             android:title="Wyloguj się" />
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="Debug">
+        <Preference
+            android:key="banTestButton"
+            android:icon="@drawable/ic_timer_24_wb"
+            android:title="Zbanuj"
+            android:summary="Zbanuj siebie na 10 sekund"/>
+    </PreferenceCategory>
 </PreferenceScreen>

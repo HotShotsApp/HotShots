@@ -20,7 +20,7 @@ import tw.app.hotshots.authentication.model.User
 import tw.app.hotshots.database.posts.GetPosts
 import tw.app.hotshots.database.posts.GetPostsSettings
 import tw.app.hotshots.database.posts.PostsListener
-import tw.app.hotshots.database.posts.user.UserSingleton
+import tw.app.hotshots.database.user.UserSingleton
 import tw.app.hotshots.databinding.FragmentProfileBinding
 import tw.app.hotshots.logger.LogType
 import tw.app.hotshots.logger.Logger

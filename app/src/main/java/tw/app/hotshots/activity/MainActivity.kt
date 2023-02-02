@@ -1,14 +1,12 @@
 package tw.app.hotshots.activity
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,16 +20,14 @@ import androidx.navigation.ui.setupWithNavController
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.torrydo.floatingbubbleview.FloatingBubbleService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import tw.app.hotshots.HotShots
 import tw.app.hotshots.R
 import tw.app.hotshots.activity.debug.DebugService
-import tw.app.hotshots.activity.posts.CreatePostActivity
-import tw.app.hotshots.database.posts.user.UserSingleton
 import tw.app.hotshots.databinding.ActivityMainBinding
 import tw.app.hotshots.databinding.ContentMainBinding
 import tw.app.hotshots.settings.SettingsActivity
@@ -106,9 +102,21 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             }
     }
 
+    private val myApp = applicationContext as HotShots
+    private fun setApplicationCurrentActivity() {
+        myApp.setCurrentActivity(this@MainActivity)
+    }
+
+    override fun onResume() {
+        setApplicationCurrentActivity()
+        super.onResume()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
+
+        setApplicationCurrentActivity()
 
         buildLoadingDialog()
 

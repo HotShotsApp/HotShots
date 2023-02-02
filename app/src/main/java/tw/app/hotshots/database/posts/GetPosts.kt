@@ -5,7 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 import tw.app.hotshots.authentication.model.User
-import tw.app.hotshots.database.posts.user.UserSingleton
+import tw.app.hotshots.database.user.UserSingleton
 import tw.app.hotshots.logger.LogType
 import tw.app.hotshots.logger.Logger
 import tw.app.hotshots.model.main.Like

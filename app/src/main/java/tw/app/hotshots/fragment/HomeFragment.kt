@@ -18,6 +18,7 @@ import tw.app.hotshots.adapter.recyclerview.PostsAdapter
 import tw.app.hotshots.database.posts.GetPosts
 import tw.app.hotshots.database.posts.GetPostsSettings
 import tw.app.hotshots.database.posts.PostsListener
+import tw.app.hotshots.database.posts.PostsSingleton
 import tw.app.hotshots.databinding.FragmentHomeBinding
 import tw.app.hotshots.logger.LogType
 import tw.app.hotshots.logger.Logger
@@ -48,6 +49,8 @@ class HomeFragment : Fragment(), CoroutineScope {
 
 
     private lateinit var mainActivity: MainActivity
+
+    private val postsSingleton = PostsSingleton.Instance
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -86,38 +89,17 @@ class HomeFragment : Fragment(), CoroutineScope {
             }
         }
 
-        val postsSettings = GetPostsSettings()
-            .setSearchAllPosts()
-
-        launch {
-            GetPosts.invoke(postsSettings, object : PostsListener {
-                override fun onReceived(posts: MutableList<Post>) {
-                    if (posts.isNotEmpty()) {
-                        val fragManager = mainActivity.supportFragmentManager
-                        val lifecycle = mainActivity.lifecycle
-                        val adapter = PostsAdapter(posts, requireContext(), fragManager, lifecycle)
-
-                        mainActivity.runOnUiThread {
-                            binding.postsMainRecyclerView.adapter = adapter
-                            mainActivity.toggleLoading(false)
-                        }
-                    }
-                }
-
-                override fun onError(e: Exception) {
-                    super.onError(e)
-                    mainActivity.runOnUiThread {
-                        Toast.makeText(requireContext(), "Błąd: ${e.message}", Toast.LENGTH_LONG)
-                            .show()
-                    }
-                }
-            })
-        }
-
         binding.createButton.setOnClickListener {
             val intent = Intent(mainActivity, CreatePostActivity::class.java)
             startActivity(intent)
             mainActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        }
+
+        getStoredPosts()
+
+        binding.swipeRefresh!!.setOnRefreshListener {
+            mainActivity.toggleLoading(true)
+            getPostsFromDatabase()
         }
 
         // Keep this on bottom
@@ -135,6 +117,54 @@ class HomeFragment : Fragment(), CoroutineScope {
     private fun setGridLayoutManager() {
         val layoutManager = GridLayoutManager(requireContext(), 3)
         binding.postsMainRecyclerView.layoutManager = layoutManager
+    }
+
+    private fun loadPostsIntoRecycler(posts: MutableList<Post>) {
+        val fragManager = mainActivity.supportFragmentManager
+        val lifecycle = mainActivity.lifecycle
+        val adapter = PostsAdapter(posts, requireContext(), fragManager, lifecycle)
+
+        mainActivity.runOnUiThread {
+            binding.postsMainRecyclerView.adapter = adapter
+            mainActivity.toggleLoading(false)
+
+            if (binding.swipeRefresh!!.isRefreshing) {
+                binding.swipeRefresh!!.isRefreshing = false
+            }
+        }
+    }
+
+    private fun getPostsFromDatabase() {
+        val postsSettings = GetPostsSettings()
+            .setSearchAllPosts()
+
+        launch {
+            GetPosts.invoke(postsSettings, object : PostsListener {
+                override fun onReceived(posts: MutableList<Post>) {
+                    if (posts.isNotEmpty()) {
+                        postsSingleton.storePosts(posts)
+                        loadPostsIntoRecycler(posts)
+                    }
+                }
+
+                override fun onError(e: Exception) {
+                    super.onError(e)
+                    mainActivity.runOnUiThread {
+                        Toast.makeText(requireContext(), "Błąd: ${e.message}", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                }
+            })
+        }
+    }
+
+    private fun getStoredPosts() {
+        if (postsSingleton.getStoredPosts().isEmpty()) {
+            mainActivity.toggleLoading(true)
+            getPostsFromDatabase()
+        } else {
+            loadPostsIntoRecycler(postsSingleton.getStoredPosts())
+        }
     }
 
     override fun onDestroyView() {

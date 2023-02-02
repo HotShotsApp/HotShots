@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import tw.app.hotshots.activity.AvatarPickerListener
 import tw.app.hotshots.activity.MainActivity
 import tw.app.hotshots.authentication.model.User
-import tw.app.hotshots.database.posts.user.UserSingleton
+import tw.app.hotshots.database.user.UserSingleton
 import tw.app.hotshots.database.user.UserDatabase
 import tw.app.hotshots.database.user.UserDatabaseListener
 import tw.app.hotshots.databinding.DialogEditProfileBinding

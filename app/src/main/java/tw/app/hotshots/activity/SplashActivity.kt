@@ -12,11 +12,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.app.hotshots.BuildConfig
+import tw.app.hotshots.HotShots
 import tw.app.hotshots.activity.auth.AuthActivity
 import tw.app.hotshots.activity.auth.UnlockActivity
 import tw.app.hotshots.authentication.Authentication
 import tw.app.hotshots.authentication.AuthenticationListener
 import tw.app.hotshots.authentication.model.User
+import tw.app.hotshots.database.user.UserDatabase
+import tw.app.hotshots.database.user.UserDatabaseListener
 import tw.app.hotshots.databinding.ActivitySplashBinding
 import tw.app.hotshots.logger.LogType
 import tw.app.hotshots.logger.Logger
@@ -59,6 +62,7 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
     private val settings get() = _settings!!
 
     // For buildDialogs()
+    private var user: User? = null
     private var bannedMessage = ""
     private var isPinRequired = false
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,6 +70,8 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
 
         _binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setApplicationCurrentActivity()
 
         initialize()
 
@@ -75,35 +81,44 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
             "$TAG | onCreate",
             LogType.NORMAL
         )
+    }
 
+    private val myApp = applicationContext as HotShots
+    private fun setApplicationCurrentActivity() {
+        myApp.setCurrentActivity(this@SplashActivity)
+    }
 
+    override fun onResume() {
+        super.onResume()
+        setApplicationCurrentActivity()
     }
 
     private fun initialize() {
         buildDialogs()
 
         _authenticationListener = object : AuthenticationListener {
-            override fun onUserAlreadyLogged(user: User) {
-                super.onUserAlreadyLogged(user)
+            override fun onUserAlreadyLogged(_user: User) {
+                super.onUserAlreadyLogged(_user)
+                user = _user
 
-                Log.d(TAG, "onUserAlreadyLogged: ispinenabled: ${user.isPinEnabled}")
+                Log.d(TAG, "onUserAlreadyLogged: ispinenabled: ${_user.isPinEnabled}")
 
-                isPinRequired = user.isPinEnabled
+                isPinRequired = _user.isPinEnabled
 
-                if (user.isBanned) {
-                    if (user.bannedTo > TimeUtil.currentTimeToLong()) { // Is still banned
-                        bannedMessage = getString(AppString.banned_dialog_message) +
-                                user.banReason + "\n\n" + "Zakończy się dnia:\n" +
-                                TimeUtil.convertLongToTime(user.bannedTo)
+                if (_user.isBanned) {
+                    if (_user.bannedTo > TimeUtil.currentTimeToLong()) { // Is still banned
+                        bannedMessage = "Twoje konto zostało zbanowane!\n\nPowód:\n" +
+                                _user.banReason + "\n\n" + "Zakończy się dnia:\n" +
+                                TimeUtil.convertLongToTime(_user.bannedTo)
                         bannedDialog.show()
-                    } else if (user.bannedTo <= TimeUtil.currentTimeToLong()) {
+                    } else if (_user.bannedTo <= TimeUtil.currentTimeToLong()) {
                         unbannedDialog.show()
                     }
 
                     return
                 }
 
-                if (user.isPinEnabled) {
+                if (_user.isPinEnabled) {
                     moveToUnlock()
                 } else {
                     moveToHome()
@@ -185,16 +200,32 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
         unbannedDialog.setTitle(getString(AppString.unbanned_dialog_title))
         unbannedDialog.setMessage(getString(AppString.unbanned_dialog_message))
         unbannedDialog.setPositiveButton(getString(AppString.unbanned_dialog_positive_button)) { _, _ ->
-            if (isPinRequired)
-                moveToUnlock()
-            else
-                moveToHome()
+            unbanAndMove();
         }
         unbannedDialog.setOnDismissListener {
-            if (isPinRequired)
-                moveToUnlock()
-            else
-                moveToHome()
+            unbanAndMove();
+        }
+    }
+
+    private fun unbanAndMove() {
+        user!!.isBanned = false
+        user!!.bannedTo = 0
+
+        var userDatabase = UserDatabase(object : UserDatabaseListener {
+            override fun onUpdated(user: User) {
+                if (isPinRequired)
+                    moveToUnlock()
+                else
+                    moveToHome()
+            }
+
+            override fun onError(exception: java.lang.Exception) {
+                showError("Uruchom aplikacje ponownie: ${exception.message}")
+            }
+        })
+
+        launch {
+            userDatabase.saveUser(user!!)
         }
     }
 

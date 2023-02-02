@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreference
 import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
@@ -17,7 +16,7 @@ import kotlinx.coroutines.tasks.await
 import tw.app.hotshots.R
 import tw.app.hotshots.activity.auth.AuthActivity
 import tw.app.hotshots.authentication.model.User
-import tw.app.hotshots.database.posts.user.UserSingleton
+import tw.app.hotshots.database.user.UserSingleton
 import tw.app.hotshots.database.user.UserDatabase
 import tw.app.hotshots.database.user.UserDatabaseListener
 import tw.app.hotshots.ui.loading.LoadingDialog
@@ -25,6 +24,7 @@ import tw.app.hotshots.ui.settings.ChangePasswordDialog
 import tw.app.hotshots.ui.settings.PasswordChangeListener
 import tw.app.hotshots.ui.settings.PinSetupDialog
 import tw.app.hotshots.ui.settings.PinSetupListener
+import tw.app.hotshots.util.TimeUtil
 import kotlin.coroutines.CoroutineContext
 
 class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
@@ -42,6 +42,7 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
     private lateinit var pinLockPref: SwitchPreferenceCompat
     private lateinit var logout: Preference
     private lateinit var passwordChangePref: Preference
+    private lateinit var banTestPref: Preference
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.settings_screen)
@@ -73,6 +74,7 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
         pinLockPref = findPreference("isPinEnabled")!!
         passwordChangePref = findPreference("passwordChange")!!
         logout = findPreference("logoutButton")!!
+        banTestPref = findPreference("banTestButton")!!
 
         var passwordDialog =
             ChangePasswordDialog(requireContext(), object : PasswordChangeListener {
@@ -140,6 +142,27 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
                 .setNegativeButton("Anuluj", null)
                 .create()
                 .show()
+
+            false
+        }
+
+        banTestPref.setOnPreferenceClickListener {
+            val user = UserSingleton.instance?.user!!
+            user.isBanned = true
+            user.bannedTo = TimeUtil.currentTimeToLong() + TimeUtil.TEN_SECONDS
+            user.banReason = "Ban Testowy"
+
+            launch {
+                UserDatabase(object : UserDatabaseListener {
+                    override fun onUpdated(user: User) {
+                        requireActivity().finishAffinity()
+                    }
+
+                    override fun onError(exception: java.lang.Exception) {
+                        Toast.makeText(requireContext(), exception.message, Toast.LENGTH_LONG).show()
+                    }
+                }).saveUser(user)
+            }
 
             false
         }
