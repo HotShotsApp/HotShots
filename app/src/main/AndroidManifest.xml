@@ -53,6 +53,9 @@
             android:name=".activity.posts.CreatePostActivity"
             android:theme="@style/Theme.HotShots" />
         <activity
+            android:name=".activity.albums.CreateAlbumActivity"
+            android:theme="@style/Theme.HotShots" />
+        <activity
             android:name=".activity.debug.DebugActivity"
             android:theme="@style/Theme.HotShots" />
         <activity
@@ -60,7 +63,13 @@
             android:theme="@style/Theme.HotShots" />
         <activity
             android:name=".activity.browser.BrowserActivity"
-            android:theme="@style/Theme.HotShots"
-            android:configChanges="orientation|screenSize"/>
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.HotShots" />
+        <activity
+            android:name=".activity.influencers.AddInfluencerActivity"
+            android:theme="@style/Theme.HotShots" />
+        <activity
+            android:name=".activity.influencers.AlbumsListActivity"
+            android:theme="@style/Theme.HotShots" />
     </application>
 </manifest>

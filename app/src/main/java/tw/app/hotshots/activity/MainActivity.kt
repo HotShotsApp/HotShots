@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
             launch {
                 Upload().Bitmap(
+                    "avatars",
                     bitmap,
                     object : UploadListener {
                         override fun onUploaded(fileUrl: String) {
@@ -102,8 +103,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             }
     }
 
-    private val myApp = applicationContext as HotShots
     private fun setApplicationCurrentActivity() {
+        val myApp = applicationContext as HotShots
         myApp.setCurrentActivity(this@MainActivity)
     }
 

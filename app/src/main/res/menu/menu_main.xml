@@ -4,7 +4,7 @@
     tools:context="tw.app.hotshots.activity.MainActivity">
     <item
         android:id="@+id/notifications_button"
-        android:icon="@drawable/ic_notifications_wb"
+        android:icon="@drawable/ic_bell_24_wb"
         android:orderInCategory="100"
         android:title="Powiadomienia"
         app:showAsAction="always" />
@@ -15,11 +15,12 @@
         android:orderInCategory="100"
         android:title="Debug"
         app:showAsAction="always"
-        android:visible="true"/>
+        android:visible="false"/>
 
     <item
         android:id="@+id/settings_button"
-        android:icon="@drawable/ic_settings_24px_wb"
+        android:icon="@drawable/ic_settings_24_wb"
+        android:orderInCategory="200"
         android:title="Ustawienia"
         app:showAsAction="always"/>
 </menu>

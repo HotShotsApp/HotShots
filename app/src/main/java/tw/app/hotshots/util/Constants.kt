@@ -24,4 +24,13 @@ object Constants {
     }
 
     val POST_IMAGE_RESIZE_VALUE = 450
+    val INFLUENCER_LIST_IMAGE_RESIZE_VALUE = 300
+}
+
+object ConstantsDatabaseCollections {
+    val INFLUENCERS = "influencers"
+    val ALBUMS = "albums"
+    val IMAGES = "images"
+    val LIKES = "likes"
+    val FOLLOWS = "follows"
 }

@@ -83,8 +83,9 @@ class HotShots : Application() {
                         Log.d(TAG, "onUserDataChanged: Triggered")
                         val isMainActivity = getCurrentActivity() is MainActivity
 
-                        if (user != null && isMainActivity) {
+                        if (isMainActivity) {
                             Log.d(TAG, "onUserDataChanged: UserSingleton user variable is not null")
+                            Log.d(TAG, "onUserDataChanged: IsBanned: ${user.isBanned}, BannedTo: ${user.bannedTo}")
                             var isBanned = user.isBanned
                             var bannedTo = user.bannedTo
                             var banReason = user.banReason
@@ -110,6 +111,7 @@ class HotShots : Application() {
                                         bannedDialog.setOnDismissListener {
                                             exitProcess(0)
                                         }
+                                        bannedDialog.setCancelable(false)
                                         bannedDialog.show()
                                         Log.d(TAG, "onUserDataChanged: Dialog banned shows")
                                     }

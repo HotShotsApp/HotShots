@@ -83,8 +83,8 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
         )
     }
 
-    private val myApp = applicationContext as HotShots
     private fun setApplicationCurrentActivity() {
+        val myApp = applicationContext as HotShots
         myApp.setCurrentActivity(this@SplashActivity)
     }
 

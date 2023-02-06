@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_FirstFragment_to_createLinkFragment"
             app:destination="@id/CreateLinkFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_influencersListFragment"
+            app:destination="@id/influencersListFragment" />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
@@ -31,6 +34,9 @@
             app:destination="@id/FirstFragment"
             app:enterAnim="@anim/enter_fade_out_fly_up"
             app:exitAnim="@anim/exit_fade_in_fly_down" />
+        <action
+            android:id="@+id/action_SecondFragment_to_influencersListFragment"
+            app:destination="@id/influencersListFragment" />
     </fragment>
     <fragment
         android:id="@+id/CreateLinkFragment"
@@ -41,6 +47,24 @@
             app:destination="@id/FirstFragment" />
         <action
             android:id="@+id/action_createLinkFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
+        <action
+            android:id="@+id/action_CreateLinkFragment_to_influencersListFragment"
+            app:destination="@id/influencersListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/influencersListFragment"
+        android:name="tw.app.hotshots.fragment.InfluencersListFragment"
+        android:label="Influencerzy"
+        tools:layout="@layout/fragment_influencers_list">
+        <action
+            android:id="@+id/action_influencersListFragment_to_CreateLinkFragment"
+            app:destination="@id/CreateLinkFragment" />
+        <action
+            android:id="@+id/action_influencersListFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+        <action
+            android:id="@+id/action_influencersListFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
     </fragment>
 </navigation>

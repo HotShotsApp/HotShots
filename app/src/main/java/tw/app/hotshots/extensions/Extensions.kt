@@ -2,14 +2,38 @@ package tw.app.hotshots.extensions
 
 import `in`.aabhasjindal.otptextview.OtpTextView
 import android.content.Context
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.PorterDuff
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.ImageView
 import androidx.core.content.ContextCompat.getSystemService
-
-
+import tw.app.hotshots.R
+import tw.app.hotshots.ui.imageview.TopCropImageView
 
 
 class Extensions {
+
+}
+
+/**
+ * ImageView's
+ */
+fun ImageView.setImageBlackWhite() {
+    colorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(0f) })
+}
+
+fun TopCropImageView.setImageBlackWhite(colorOverlay: Int?) {
+    colorFilter = ColorMatrixColorFilter(ColorMatrix().apply {
+        //setSaturation(0f);
+        if (colorOverlay != null) {
+            setColorFilter(colorOverlay, PorterDuff.Mode.DARKEN)
+        }
+    })
+}
+
+fun TopCropImageView.setColorLayer() {
 
 }
 

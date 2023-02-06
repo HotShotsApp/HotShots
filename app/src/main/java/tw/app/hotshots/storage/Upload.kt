@@ -18,6 +18,7 @@ import java.io.InputStream
 
 class Upload {
     suspend fun Bitmap(
+        database: String,
         bitmapImage: Bitmap,
         listener: UploadListener
     ) {
@@ -27,7 +28,7 @@ class Upload {
 
         val storage = FirebaseStorage.getInstance("gs://walkboner-72c59.appspot.com")
         val storageRef = storage.reference
-        val mountainsRef = storageRef.child("avatars/" + UidGenerator.Generate(12) + ".png")
+        val mountainsRef = storageRef.child("$database/" + UidGenerator.Generate(12) + ".png")
 
         val uploadTask: UploadTask = mountainsRef.putBytes(data)
         uploadTask.addOnFailureListener {

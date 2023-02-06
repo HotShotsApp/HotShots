@@ -152,7 +152,7 @@ class CreateLinkFragment : Fragment() {
 
         val swipeToDeleteCallback = SwipeToDeleteCallback(mainActivity, object : OnSwipedListener {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.adapterPosition
+                val position = viewHolder.bindingAdapterPosition
                 val link = adapter.getLink(position)
 
                 mainActivity.runOnUiThread {
