@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.app.hotshots.BuildConfig
-import tw.app.hotshots.HotShots
+import tw.app.hotshots.app.HotShots
 import tw.app.hotshots.activity.auth.AuthActivity
 import tw.app.hotshots.activity.auth.UnlockActivity
 import tw.app.hotshots.authentication.Authentication
@@ -159,9 +159,9 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
 
     private fun setup() {
         val ver = if (BuildConfig.DEBUG) {
-            "${BuildConfig.VERSION_NAME}\n${BuildConfig.BUILD_TYPE.uppercase(Locale.getDefault())}"
+            "${BuildConfig.VERSION_NAME}\nDEBUG MODE"
         } else {
-            BuildConfig.VERSION_NAME
+            "BuildConfig.VERSION_NAME\nRELEASE"
         }
 
         binding.appVersionText.text = ver

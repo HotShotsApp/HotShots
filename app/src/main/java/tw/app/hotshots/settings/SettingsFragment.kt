@@ -15,6 +15,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import tw.app.hotshots.R
 import tw.app.hotshots.activity.auth.AuthActivity
+import tw.app.hotshots.authentication.Biometric
+import tw.app.hotshots.authentication.BiometricStatusListener
 import tw.app.hotshots.authentication.model.User
 import tw.app.hotshots.database.user.UserSingleton
 import tw.app.hotshots.database.user.UserDatabase
@@ -39,10 +41,15 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
 
     private lateinit var loadingDialog: LoadingDialog
 
+    private var _biometric: Biometric? = null
+    private val biometric get() = _biometric!!
+    private var isBiometricSupported = false
+
     private lateinit var pinLockPref: SwitchPreferenceCompat
     private lateinit var logout: Preference
     private lateinit var passwordChangePref: Preference
     private lateinit var banTestPref: Preference
+    private lateinit var biometricPref: SwitchPreferenceCompat
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.settings_screen)
@@ -53,6 +60,24 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
     private fun setup() {
         loadingDialog = LoadingDialog(requireContext())
         loadingDialog.build()
+
+        pinLockPref = findPreference("isPinEnabled")!!
+        passwordChangePref = findPreference("passwordChange")!!
+        logout = findPreference("logoutButton")!!
+        banTestPref = findPreference("banTestButton")!!
+        biometricPref = findPreference("isBiometricEnabled")!!
+
+        _biometric = Biometric(requireActivity(), requireContext())
+        biometric.checkBiometricStatus(object : BiometricStatusListener {
+            override fun onStatusPositive() {
+                isBiometricSupported = true
+            }
+
+            override fun onError(reason: String) {
+                isBiometricSupported = false
+                biometricPref.summary = reason
+            }
+        })
 
         userDatabase = UserDatabase(object : UserDatabaseListener {
             override fun onUpdated(user: User) {
@@ -70,11 +95,6 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
                 }
             }
         })
-
-        pinLockPref = findPreference("isPinEnabled")!!
-        passwordChangePref = findPreference("passwordChange")!!
-        logout = findPreference("logoutButton")!!
-        banTestPref = findPreference("banTestButton")!!
 
         var passwordDialog =
             ChangePasswordDialog(requireContext(), object : PasswordChangeListener {
@@ -110,6 +130,9 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
             if (value) {
                 var pinDialog = PinSetupDialog(requireContext(), object : PinSetupListener {
                     override fun onSaved(otp: String) {
+                        if (isBiometricSupported)
+                            biometricPref.isEnabled = true
+
                         loadingDialog.show()
                         launch {
                             userDatabase.changePin(otp)
@@ -119,6 +142,8 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
 
                 pinDialog.show()
             } else {
+                pinLockPref.isEnabled = false
+                Settings(requireContext()).setBiometricEnabled(false)
                 loadingDialog.show()
                 launch {
                     userDatabase.togglePin(false)
@@ -128,13 +153,15 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
             false
         }
 
+        // TODO: Make settings as variable so we can set this as null on view destroy, and add strings to strings.xml
         logout.setOnPreferenceClickListener {
             val dialog = MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Wyloguj się")
-                .setMessage("Czy na pewno chcesz się wylogować?")
+                .setMessage("Czy na pewno chcesz się wylogować?\nTwoje ustawienia zostaną zresetowane!")
                 .setPositiveButton("Wyloguj") {_, _ ->
                     FirebaseAuth.getInstance().signOut()
 
+                    Settings(requireContext()).resetSettings()
                     val intent = Intent(activity, AuthActivity::class.java)
                     startActivity(intent)
                     activity?.finishAffinity()
@@ -170,5 +197,10 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
 
     private fun validate(user: User) {
         pinLockPref.isChecked = user.isPinEnabled
+
+        if (user.isPinEnabled) {
+            if (isBiometricSupported)
+                biometricPref.isEnabled = true
+        }
     }
 }

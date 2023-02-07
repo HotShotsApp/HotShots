@@ -1,4 +1,4 @@
-package tw.app.hotshots
+package tw.app.hotshots.app
 
 import android.app.Activity
 import android.app.Application
@@ -8,9 +8,10 @@ import android.widget.Toast
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
+import tw.app.hotshots.BuildConfig
+import tw.app.hotshots.R
 import tw.app.hotshots.activity.MainActivity
 import tw.app.hotshots.authentication.model.User
-import tw.app.hotshots.database.user.UserSingleton
 import tw.app.hotshots.database.user.UserWatcher
 import tw.app.hotshots.database.user.UserWatcherListener
 import tw.app.hotshots.logger.LogType

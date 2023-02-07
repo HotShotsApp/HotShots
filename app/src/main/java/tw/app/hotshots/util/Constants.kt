@@ -33,4 +33,11 @@ object ConstantsDatabaseCollections {
     val IMAGES = "images"
     val LIKES = "likes"
     val FOLLOWS = "follows"
+    val APP = "app"
+}
+
+object ConstantsDatabaseDocuments {
+    val MAINTENANCE = "maintenance"
+    val PRESENTATION = "presentation"
+    val VERSION = "version"
 }

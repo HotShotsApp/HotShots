@@ -14,6 +14,7 @@ class Settings(context: Context) {
     private val IS_PRIVATE_VIEW_ENABLED = "isPrivateViewEnabled"
     private val IS_WARNING_ABOUT_IN_APP_BROWSER_READED = "isWarningAboutInAppBrowserReaded"
     private val IS_USER_FIRST_RUN = "isUserFirstRun"
+    private val IS_BIOMETRIC_ENABLED = "isBiometricEnabled"
 
     fun isLinkTitleAutoCompleteEnabled(): Boolean {
         return getBoolean(IS_LINK_TITLE_AUTO_COMPLETE_ENABLED, true)
@@ -35,6 +36,23 @@ class Settings(context: Context) {
         if (!value) setBoolean(IS_USER_FIRST_RUN, false)
 
         return getBoolean(IS_USER_FIRST_RUN, true)
+    }
+
+    fun isBiometricEnabled(): Boolean {
+        return getBoolean(IS_BIOMETRIC_ENABLED, false)
+    }
+
+    fun setBiometricEnabled(value: Boolean) {
+        setBoolean(IS_BIOMETRIC_ENABLED, value)
+    }
+
+    /**
+     * Warning
+     *
+     * This will delete a [SharedPreferences] data (Reset to default)
+     */
+    fun resetSettings() {
+        editor.clear().apply()
     }
 
     private fun getBoolean(key: String, defValue: Boolean): Boolean {

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/nav_add_admin">
+    <fragment
+        android:id="@+id/nav_add_admin"
+        android:name="tw.app.hshotadmin.fragments.AddAdministratorFragment"
+        android:label="Dodaj Administratora">
+        <action
+            android:id="@+id/action_addAdministratorFragment2_to_addModeratorFragment"
+            app:destination="@id/nav_add_moderator" />
+        <action
+            android:id="@+id/action_addAdministratorFragment2_to_newInfluencersFragment"
+            app:destination="@id/nav_new_influ" />
+        <action
+            android:id="@+id/action_addAdministratorFragment2_to_reportedAlbumsFragment"
+            app:destination="@id/nav_reported_albums" />
+        <action
+            android:id="@+id/action_addAdministratorFragment2_to_reportedInfluencersFragment"
+            app:destination="@id/nav_reported_influ" />
+        <action
+            android:id="@+id/action_addAdministratorFragment2_to_reportedPostsFragment"
+            app:destination="@id/nav_reported_posts" />
+        <action
+            android:id="@+id/action_addAdministratorFragment2_to_reportedUsersFragment"
+            app:destination="@id/nav_reported_users" />
+        <action
+            android:id="@+id/action_addAdministratorFragment2_to_administratorsFragment"
+            app:destination="@id/nav_admins" />
+        <action
+            android:id="@+id/action_addAdministratorFragment2_to_moderatorsFragment"
+            app:destination="@id/nav_moderators" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_add_moderator"
+        android:name="tw.app.hshotadmin.fragments.AddModeratorFragment"
+        android:label="Dodaj Moderatora">
+        <action
+            android:id="@+id/action_addModeratorFragment_to_administratorsFragment"
+            app:destination="@id/nav_admins" />
+        <action
+            android:id="@+id/action_addModeratorFragment_to_newInfluencersFragment"
+            app:destination="@id/nav_new_influ" />
+        <action
+            android:id="@+id/action_addModeratorFragment_to_reportedAlbumsFragment"
+            app:destination="@id/nav_reported_albums" />
+        <action
+            android:id="@+id/action_addModeratorFragment_to_reportedInfluencersFragment"
+            app:destination="@id/nav_reported_influ" />
+        <action
+            android:id="@+id/action_addModeratorFragment_to_reportedPostsFragment"
+            app:destination="@id/nav_reported_posts" />
+        <action
+            android:id="@+id/action_addModeratorFragment_to_reportedUsersFragment"
+            app:destination="@id/nav_reported_users" />
+        <action
+            android:id="@+id/action_addModeratorFragment_to_moderatorsFragment"
+            app:destination="@id/nav_moderators" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_admins"
+        android:name="tw.app.hshotadmin.fragments.AdministratorsFragment"
+        android:label="Administratorzy">
+        <action
+            android:id="@+id/action_administratorsFragment_to_moderatorsFragment"
+            app:destination="@id/nav_moderators" />
+        <action
+            android:id="@+id/action_administratorsFragment_to_newInfluencersFragment"
+            app:destination="@id/nav_new_influ" />
+        <action
+            android:id="@+id/action_administratorsFragment_to_moderatorsFragment2"
+            app:destination="@id/nav_moderators" />
+        <action
+            android:id="@+id/action_administratorsFragment_to_reportedAlbumsFragment"
+            app:destination="@id/nav_reported_albums" />
+        <action
+            android:id="@+id/action_administratorsFragment_to_reportedInfluencersFragment"
+            app:destination="@id/nav_reported_influ" />
+        <action
+            android:id="@+id/action_administratorsFragment_to_reportedPostsFragment"
+            app:destination="@id/nav_reported_posts" />
+        <action
+            android:id="@+id/action_administratorsFragment_to_reportedUsersFragment"
+            app:destination="@id/nav_reported_users" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_moderators"
+        android:name="tw.app.hshotadmin.fragments.ModeratorsFragment"
+        android:label="Moderatorzy">
+        <action
+            android:id="@+id/action_moderatorsFragment_to_newInfluencersFragment"
+            app:destination="@id/nav_new_influ" />
+        <action
+            android:id="@+id/action_moderatorsFragment_to_reportedAlbumsFragment"
+            app:destination="@id/nav_reported_albums" />
+        <action
+            android:id="@+id/action_moderatorsFragment_to_reportedInfluencersFragment"
+            app:destination="@id/nav_reported_influ" />
+        <action
+            android:id="@+id/action_moderatorsFragment_to_reportedPostsFragment"
+            app:destination="@id/nav_reported_posts" />
+        <action
+            android:id="@+id/action_moderatorsFragment_to_reportedUsersFragment"
+            app:destination="@id/nav_reported_users" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_new_influ"
+        android:name="tw.app.hshotadmin.fragments.NewInfluencersFragment"
+        android:label="Nowi Influencerzy">
+        <action
+            android:id="@+id/action_newInfluencersFragment_to_reportedAlbumsFragment"
+            app:destination="@id/nav_reported_albums" />
+        <action
+            android:id="@+id/action_newInfluencersFragment_to_addAdministratorFragment2"
+            app:destination="@id/nav_add_admin" />
+        <action
+            android:id="@+id/action_newInfluencersFragment_to_addModeratorFragment"
+            app:destination="@id/nav_add_moderator" />
+        <action
+            android:id="@+id/action_newInfluencersFragment_to_administratorsFragment"
+            app:destination="@id/nav_admins" />
+        <action
+            android:id="@+id/action_newInfluencersFragment_to_moderatorsFragment"
+            app:destination="@id/nav_moderators" />
+        <action
+            android:id="@+id/action_newInfluencersFragment_to_reportedAlbumsFragment2"
+            app:destination="@id/nav_reported_albums" />
+        <action
+            android:id="@+id/action_newInfluencersFragment_to_reportedInfluencersFragment"
+            app:destination="@id/nav_reported_influ" />
+        <action
+            android:id="@+id/action_newInfluencersFragment_to_reportedPostsFragment"
+            app:destination="@id/nav_reported_posts" />
+        <action
+            android:id="@+id/action_newInfluencersFragment_to_reportedUsersFragment"
+            app:destination="@id/nav_reported_users" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_reported_albums"
+        android:name="tw.app.hshotadmin.fragments.ReportedAlbumsFragment"
+        android:label="Zgłoszone Albumy">
+        <action
+            android:id="@+id/action_reportedAlbumsFragment_to_reportedInfluencersFragment"
+            app:destination="@id/nav_reported_influ" />
+        <action
+            android:id="@+id/action_reportedAlbumsFragment_to_addAdministratorFragment2"
+            app:destination="@id/nav_add_admin" />
+        <action
+            android:id="@+id/action_reportedAlbumsFragment_to_addModeratorFragment"
+            app:destination="@id/nav_add_moderator" />
+        <action
+            android:id="@+id/action_reportedAlbumsFragment_to_administratorsFragment"
+            app:destination="@id/nav_admins" />
+        <action
+            android:id="@+id/action_reportedAlbumsFragment_to_moderatorsFragment"
+            app:destination="@id/nav_moderators" />
+        <action
+            android:id="@+id/action_reportedAlbumsFragment_to_newInfluencersFragment"
+            app:destination="@id/nav_new_influ" />
+        <action
+            android:id="@+id/action_reportedAlbumsFragment_to_reportedInfluencersFragment2"
+            app:destination="@id/nav_reported_influ" />
+        <action
+            android:id="@+id/action_reportedAlbumsFragment_to_reportedPostsFragment"
+            app:destination="@id/nav_reported_posts" />
+        <action
+            android:id="@+id/action_reportedAlbumsFragment_to_reportedUsersFragment"
+            app:destination="@id/nav_reported_users" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_reported_influ"
+        android:name="tw.app.hshotadmin.fragments.ReportedInfluencersFragment"
+        android:label="Zgłoszeni Influencerzy">
+        <action
+            android:id="@+id/action_reportedInfluencersFragment_to_reportedPostsFragment"
+            app:destination="@id/nav_reported_posts" />
+        <action
+            android:id="@+id/action_reportedInfluencersFragment_to_addAdministratorFragment2"
+            app:destination="@id/nav_add_admin" />
+        <action
+            android:id="@+id/action_reportedInfluencersFragment_to_addModeratorFragment"
+            app:destination="@id/nav_add_moderator" />
+        <action
+            android:id="@+id/action_reportedInfluencersFragment_to_administratorsFragment"
+            app:destination="@id/nav_admins" />
+        <action
+            android:id="@+id/action_reportedInfluencersFragment_to_moderatorsFragment"
+            app:destination="@id/nav_moderators" />
+        <action
+            android:id="@+id/action_reportedInfluencersFragment_to_newInfluencersFragment"
+            app:destination="@id/nav_new_influ" />
+        <action
+            android:id="@+id/action_reportedInfluencersFragment_to_reportedAlbumsFragment"
+            app:destination="@id/nav_reported_albums" />
+        <action
+            android:id="@+id/action_reportedInfluencersFragment_to_reportedPostsFragment2"
+            app:destination="@id/nav_reported_posts" />
+        <action
+            android:id="@+id/action_reportedInfluencersFragment_to_reportedUsersFragment"
+            app:destination="@id/nav_reported_users" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_reported_posts"
+        android:name="tw.app.hshotadmin.fragments.ReportedPostsFragment"
+        android:label="Zgłoszone Posty">
+        <action
+            android:id="@+id/action_reportedPostsFragment_to_reportedUsersFragment"
+            app:destination="@id/nav_reported_users" />
+        <action
+            android:id="@+id/action_reportedPostsFragment_to_addAdministratorFragment2"
+            app:destination="@id/nav_add_admin" />
+        <action
+            android:id="@+id/action_reportedPostsFragment_to_addModeratorFragment"
+            app:destination="@id/nav_add_moderator" />
+        <action
+            android:id="@+id/action_reportedPostsFragment_to_administratorsFragment"
+            app:destination="@id/nav_admins" />
+        <action
+            android:id="@+id/action_reportedPostsFragment_to_moderatorsFragment"
+            app:destination="@id/nav_moderators" />
+        <action
+            android:id="@+id/action_reportedPostsFragment_to_newInfluencersFragment"
+            app:destination="@id/nav_new_influ" />
+        <action
+            android:id="@+id/action_reportedPostsFragment_to_reportedAlbumsFragment"
+            app:destination="@id/nav_reported_albums" />
+        <action
+            android:id="@+id/action_reportedPostsFragment_to_reportedUsersFragment2"
+            app:destination="@id/nav_reported_users" />
+        <action
+            android:id="@+id/action_reportedPostsFragment_to_reportedInfluencersFragment"
+            app:destination="@id/nav_reported_influ" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_reported_users"
+        android:name="tw.app.hshotadmin.fragments.ReportedUsersFragment"
+        android:label="Zgłoszeni Użytkownicy">
+        <action
+            android:id="@+id/action_reportedUsersFragment_to_addAdministratorFragment2"
+            app:destination="@id/nav_add_admin" />
+        <action
+            android:id="@+id/action_reportedUsersFragment_to_addModeratorFragment"
+            app:destination="@id/nav_add_moderator" />
+        <action
+            android:id="@+id/action_reportedUsersFragment_to_administratorsFragment"
+            app:destination="@id/nav_admins" />
+        <action
+            android:id="@+id/action_reportedUsersFragment_to_moderatorsFragment"
+            app:destination="@id/nav_moderators" />
+        <action
+            android:id="@+id/action_reportedUsersFragment_to_newInfluencersFragment"
+            app:destination="@id/nav_new_influ" />
+        <action
+            android:id="@+id/action_reportedUsersFragment_to_reportedPostsFragment"
+            app:destination="@id/nav_reported_posts" />
+        <action
+            android:id="@+id/action_reportedUsersFragment_to_reportedAlbumsFragment"
+            app:destination="@id/nav_reported_albums" />
+        <action
+            android:id="@+id/action_reportedUsersFragment_to_reportedInfluencersFragment"
+            app:destination="@id/nav_reported_influ" />
+    </fragment>
+</navigation>

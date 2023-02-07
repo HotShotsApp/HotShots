@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_admins"
+            android:title="Administratorzy"/>
+
+        <item android:id="@+id/nav_add_admin"
+            android:title="Dodaj administratora"/>
+
+        <item android:id="@+id/nav_moderators"
+            android:title="Moderatorzy"/>
+
+        <item android:id="@+id/nav_add_moderator"
+            android:title="Dodaj moderatora"/>
+
+        <item android:id="@+id/nav_new_influ"
+            android:title="Nowi influencerzy"/>
+
+        <item android:id="@+id/nav_reported_influ"
+            android:title="Zgłoszeni influencerzy"/>
+
+        <item android:id="@+id/nav_reported_users"
+            android:title="Zgłoszeni Użytkownicy"/>
+
+        <item android:id="@+id/nav_reported_posts"
+            android:title="Zgłoszone posty"/>
+
+        <item android:id="@+id/nav_reported_albums"
+            android:title="Zgłoszone albumy"/>
+    </group>
+</menu>

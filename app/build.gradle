@@ -14,7 +14,7 @@ android {
         minSdk 23
         targetSdk 33
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0 BETA"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -59,7 +59,7 @@ dependencies {
     implementation 'com.github.YvesCheung.RollingText:RollingText:1.2.11'           // Animated TextView Changes
     implementation 'kr.co.prnd:readmore-textview:1.0.0'                             // Read More TextView for large text
     implementation 'com.vanniktech:android-image-cropper:4.3.3'                     // Image Cropper
-
+    implementation "androidx.biometric:biometric-ktx:1.2.0-alpha05"                 // Biometric Authentication
     implementation 'com.google.android.exoplayer:exoplayer:2.18.2'                  // Video Player
 
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'

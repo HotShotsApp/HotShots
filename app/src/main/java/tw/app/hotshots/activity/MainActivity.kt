@@ -25,7 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import tw.app.hotshots.HotShots
+import tw.app.hotshots.app.HotShots
 import tw.app.hotshots.R
 import tw.app.hotshots.activity.debug.DebugService
 import tw.app.hotshots.databinding.ActivityMainBinding

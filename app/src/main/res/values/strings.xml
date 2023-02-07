@@ -2,6 +2,7 @@
     <string name="app_name">HotShots</string>
     <string name="action_settings">Settings</string>
 
+    <string name="discord_invite_url">https://discord.gg/ZPuJ3Axbdf</string>
     <string name="database_url">https://walkboner-72c59-default-rtdb.europe-west1.firebasedatabase.app/</string>
 
     <!-- NOTICE DIALOG STARTUP -->
