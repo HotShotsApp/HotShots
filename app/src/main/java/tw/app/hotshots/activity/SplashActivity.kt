@@ -94,6 +94,9 @@ class SplashActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private fun initialize() {
+        // Initialize Settings
+        _settings = Settings(this@SplashActivity)
+
         buildDialogs()
 
         _authenticationListener = object : AuthenticationListener {

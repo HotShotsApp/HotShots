@@ -28,6 +28,7 @@ object Constants {
 }
 
 object ConstantsDatabaseCollections {
+    val POSTS = "posts"
     val INFLUENCERS = "influencers"
     val ALBUMS = "albums"
     val IMAGES = "images"

@@ -24,6 +24,7 @@ import tw.app.hotshots.databinding.FragmentCreateLinkBinding
 import tw.app.hotshots.fragment.link_manager.model.Link
 import tw.app.hotshots.settings.Settings
 import tw.app.hotshots.ui.link.*
+import tw.app.hotshots.util.CopyUtil
 
 class CreateLinkFragment : Fragment() {
     private var _binding: FragmentCreateLinkBinding? = null
@@ -124,6 +125,14 @@ class CreateLinkFragment : Fragment() {
                         } else {
                             openInAppBrowser()
                         }
+                    }
+
+                    OpenIn.COPY -> {
+                        CopyUtil().copy(
+                            prevClickedLink!!.url,
+                            requireContext(),
+                            "Skopiowano URL!"
+                        )
                     }
                 }
             }

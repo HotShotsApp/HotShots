@@ -71,5 +71,8 @@
         <activity
             android:name=".activity.influencers.AlbumsListActivity"
             android:theme="@style/Theme.HotShots" />
+        <activity
+            android:name=".activity.posts.BigPictureSlideActivity"
+            android:theme="@style/Theme.HotShots" />
     </application>
 </manifest>

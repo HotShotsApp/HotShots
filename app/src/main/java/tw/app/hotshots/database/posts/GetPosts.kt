@@ -11,13 +11,16 @@ import tw.app.hotshots.logger.Logger
 import tw.app.hotshots.model.main.Like
 import tw.app.hotshots.model.main.Post
 import tw.app.hotshots.model.media.Image
+import tw.app.hotshots.util.ConstantsDatabaseCollections
 
 object GetPosts {
     suspend fun invoke(settings: GetPostsSettings, listener: PostsListener) {
         if (settings.getSearchType() == GetPostsSettings.Companion.Search.AllPosts) {
             getVisiblePosts(listener)
-        } else {
+        } else if (settings.getSearchType() == GetPostsSettings.Companion.Search.UserPosts) {
             getUserPosts(settings.getUserUid(), listener)
+        } else {
+            getPost(settings.getPostUID(), listener)
         }
     }
 
@@ -33,7 +36,8 @@ object GetPosts {
         for (postDoc in postsSnapshot.documents) {
             val post = postDoc.toObject(Post::class.java)!!
 
-            val imagesSnapshot = database.document(post.uid).collection("images").orderBy("order").get().await()
+            val imagesSnapshot =
+                database.document(post.uid).collection("images").orderBy("order").get().await()
 
             for (imageDoc in imagesSnapshot) {
                 val image = imageDoc.toObject(Image::class.java)
@@ -71,12 +75,14 @@ object GetPosts {
 
         val postsList: MutableList<Post> = arrayListOf()
 
-        val postsSnapshot = database.whereEqualTo("userUid", userUid).orderBy("createdAt", Query.Direction.DESCENDING).get().await()
+        val postsSnapshot = database.whereEqualTo("userUid", userUid)
+            .orderBy("createdAt", Query.Direction.DESCENDING).get().await()
 
         for (postDoc in postsSnapshot.documents) {
             val post = postDoc.toObject(Post::class.java)!!
 
-            val imagesSnapshot = database.document(post.uid).collection("images").orderBy("order").get().await()
+            val imagesSnapshot =
+                database.document(post.uid).collection("images").orderBy("order").get().await()
 
             for (imageDoc in imagesSnapshot) {
                 val image = imageDoc.toObject(Image::class.java)
@@ -100,16 +106,51 @@ object GetPosts {
 
         listener.onReceived(postsList)
     }
+
+    private suspend fun getPost(postUid: String, listener: PostsListener) {
+        val database =
+            FirebaseFirestore.getInstance().collection(ConstantsDatabaseCollections.POSTS)
+                .document(postUid)
+
+        val postDoc = database.get().await()
+
+        val post = postDoc.toObject(Post::class.java)!!
+
+        val imagesSnapshot =
+            database.collection("images").orderBy("order").get().await()
+
+        for (imageDoc in imagesSnapshot) {
+            val image = imageDoc.toObject(Image::class.java)
+
+            post.images.add(image)
+        }
+
+        val likesSnapshot = database.collection(ConstantsDatabaseCollections.LIKES).get().await()
+
+        for (likesDoc in likesSnapshot.documents) {
+            val like = likesDoc.toObject(Like::class.java)!!
+            if (like.likedBy == UserSingleton.instance?.user?.uid!!)
+                post.userLikedPost = true
+
+            post.likes.add(like)
+        }
+
+        post.user = UserSingleton.instance?.user!!
+
+        listener.onReceived(post)
+    }
 }
 
 class GetPostsSettings {
     private var _searchType = Search.AllPosts
     private var _userUid = ""
+    private var _postUid = ""
 
     companion object {
         enum class Search {
             AllPosts,
-            UserPosts
+            UserPosts,
+            PostByUID
         }
     }
 
@@ -131,10 +172,21 @@ class GetPostsSettings {
     fun getUserUid(): String {
         return _userUid
     }
+
+    fun setSearchByPostUID(postUid: String) {
+        _searchType = Search.PostByUID
+        _postUid = postUid
+    }
+
+    fun getPostUID(): String {
+        return _postUid
+    }
 }
 
 interface PostsListener {
-    fun onReceived(posts: MutableList<Post>)
+    fun onReceived(posts: MutableList<Post>) {}
+
+    fun onReceived(post: Post) {}
 
     fun onError(e: java.lang.Exception) {
         Logger.log(

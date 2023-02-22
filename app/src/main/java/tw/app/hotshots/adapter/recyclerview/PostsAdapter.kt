@@ -39,6 +39,8 @@ class PostsAdapter(
     private val lifecycle: Lifecycle
 ) : RecyclerView.Adapter<PostsAdapter.ViewHolder>() {
 
+    private var onPostClickListener: OnPostClickListener? = null
+
     inner class ViewHolder(val binding: ItemPostBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostsAdapter.ViewHolder {
@@ -56,6 +58,11 @@ class PostsAdapter(
         holder.binding.likesPostAmountText.charStrategy = CarryBitAnimation(Direction.SCROLL_DOWN)
         holder.binding.likesPostAmountText.addCharOrder(CharOrder.Number)
         holder.binding.likesPostAmountText.animationInterpolator = OvershootInterpolator()
+
+        holder.binding.root.setOnClickListener {
+            if (isClickListenerAvailable())
+                onPostClickListener!!.onClick(post.uid)
+        }
 
         if (post.images.size == 1)
             holder.binding.viewpagerIndicator.visibility = GONE
@@ -146,4 +153,18 @@ class PostsAdapter(
         return mData.size
     }
 
+    fun setOnPostClickListener(_listener: OnPostClickListener) {
+        onPostClickListener = _listener
+    }
+
+    fun isClickListenerAvailable(): Boolean {
+        return onPostClickListener != null
+    }
+
+}
+
+interface OnPostClickListener {
+    fun onClick(postUid: String) {}
+
+    fun onDoubleClick(postUid: String) {}
 }

@@ -13,7 +13,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.app.hotshots.R
 import tw.app.hotshots.activity.MainActivity
+import tw.app.hotshots.activity.posts.BigPictureSlideActivity
 import tw.app.hotshots.activity.posts.CreatePostActivity
+import tw.app.hotshots.adapter.recyclerview.OnPostClickListener
 import tw.app.hotshots.adapter.recyclerview.PostsAdapter
 import tw.app.hotshots.database.posts.GetPosts
 import tw.app.hotshots.database.posts.GetPostsSettings
@@ -123,6 +125,15 @@ class HomeFragment : Fragment(), CoroutineScope {
         val fragManager = mainActivity.supportFragmentManager
         val lifecycle = mainActivity.lifecycle
         val adapter = PostsAdapter(posts, requireContext(), fragManager, lifecycle)
+
+        adapter.setOnPostClickListener(object : OnPostClickListener {
+            override fun onClick(postUid: String) {
+                val intent = Intent(requireActivity(), BigPictureSlideActivity::class.java)
+                intent.putExtra("postUid", postUid)
+                startActivity(intent)
+                requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            }
+        })
 
         mainActivity.runOnUiThread {
             binding.postsMainRecyclerView.adapter = adapter

@@ -13,7 +13,6 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/dotsindicator" />
-            <option value="$PROJECT_DIR$/hshotadmin" />
           </set>
         </option>
       </GradleProjectSettings>

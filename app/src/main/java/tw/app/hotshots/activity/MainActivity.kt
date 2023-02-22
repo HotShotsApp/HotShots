@@ -47,14 +47,25 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     /* ------------------------------------------ */
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var content: ContentMainBinding
+
+    private var _binding: ActivityMainBinding? = null
+    private val binding get() = _binding!!
+
+    private var _content: ContentMainBinding? = null
+    private val content get() = _content!!
 
     private lateinit var debugService: Intent
 
-    private lateinit var loadingDialog: LoadingDialog
-    private var createLinkDialog: CreateLinkDialog? = null
-    private var createLinkListener: CreateLinkDialogListener? = null
+    private var _loadingDialog: LoadingDialog? = null
+    private val loadingDialog get() = _loadingDialog!!
+
+    private var _createLinkDialog: CreateLinkDialog? = null
+    private val createLinkDialog get() = _createLinkDialog!!
+
+    private var _createLinkListener: CreateLinkDialogListener? = null
+    private val createLinkListener get() = _createLinkListener!!
+
+    var shouldUploadToDatabase = true
 
     // Avatar Picker
     var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
@@ -63,24 +74,28 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     private val cropImage = registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
-            var bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), result.uriContent);
+            var bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, result.uriContent);
 
             listenerAvatar!!.onCropped(bitmap)
 
-            launch {
-                Upload().Bitmap(
-                    "avatars",
-                    bitmap,
-                    object : UploadListener {
-                        override fun onUploaded(fileUrl: String) {
-                            listenerAvatar!!.onUploaded(fileUrl)
-                        }
+            if (shouldUploadToDatabase) {
+                launch {
+                    Upload().Bitmap(
+                        "avatars",
+                        bitmap,
+                        object : UploadListener {
+                            override fun onUploaded(fileUrl: String) {
+                                listenerAvatar!!.onUploaded(fileUrl)
+                            }
 
-                        override fun onError(reason: String) {
-                            listenerAvatar!!.onUploadError(reason)
+                            override fun onError(reason: String) {
+                                listenerAvatar!!.onUploadError(reason)
+                            }
                         }
-                    }
-                )
+                    )
+                }
+            } else {
+                shouldUploadToDatabase = true
             }
         } else {
             listenerAvatar!!.onUploadError(result.error?.message!!)
@@ -90,16 +105,16 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     init {
         pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-                contentResolver.takePersistableUriPermission(uri!!, uriPermissionFlag)
+                if (uri != null) {
+                    contentResolver.takePersistableUriPermission(uri, uriPermissionFlag)
 
-                //val imagePath: String? = UriUtil(context).getPath(uri)
-
-                cropImage.launch(
-                    options(uri = uri) {
-                        setGuidelines(CropImageView.Guidelines.ON)
-                        setOutputCompressFormat(Bitmap.CompressFormat.PNG)
-                    }
-                )
+                    cropImage.launch(
+                        options(uri = uri) {
+                            setGuidelines(CropImageView.Guidelines.ON)
+                            setOutputCompressFormat(Bitmap.CompressFormat.PNG)
+                        }
+                    )
+                }
             }
     }
 
@@ -123,8 +138,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
         debugService = Intent(this@MainActivity, DebugService::class.java)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        content = binding.mainContentInclude
+        _binding = ActivityMainBinding.inflate(layoutInflater)
+        _content = binding.mainContentInclude
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
@@ -137,6 +152,16 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         content.railNavigationBottomView.setupWithNavController(navController)
 
         setup()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        _binding = null
+        _content = null
+        _loadingDialog = null
+        _createLinkDialog = null
+        _createLinkListener = null
     }
 
     private fun setup() {
@@ -182,7 +207,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     }
 
     private fun buildLoadingDialog() {
-        loadingDialog = LoadingDialog(this@MainActivity)
+        _loadingDialog = LoadingDialog(this@MainActivity)
         loadingDialog.build()
         loadingDialog.setIndeterminate(true)
     }

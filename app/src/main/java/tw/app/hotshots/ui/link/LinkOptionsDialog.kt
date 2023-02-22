@@ -11,6 +11,7 @@ import tw.app.hotshots.databinding.DialogEditLinkBinding
 import tw.app.hotshots.databinding.DialogLinkOptionsBinding
 import tw.app.hotshots.fragment.link_manager.model.Link
 import tw.app.hotshots.settings.Settings
+import tw.app.hotshots.util.CopyUtil
 import tw.app.hotshots.util.TimeUtil
 import tw.app.hotshots.util.UidGenerator
 
@@ -38,6 +39,11 @@ class LinkOptionsDialog(
             listener.onOpen(OpenIn.BROWSER)
             dismiss()
         }
+
+        binding.copyLinkButton.setOnClickListener {
+            listener.onOpen(OpenIn.COPY)
+            dismiss()
+        }
     }
 
     override fun dismiss() {
@@ -51,5 +57,6 @@ interface LinkOptionsListener {
 
 enum class OpenIn {
     BROWSER,
-    INAPP
+    INAPP,
+    COPY
 }

@@ -1,17 +1,25 @@
 package tw.app.hotshots.ui.link
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import tw.app.hotshots.activity.AvatarPickerListener
+import tw.app.hotshots.activity.MainActivity
 import tw.app.hotshots.databinding.DialogEditLinkBinding
 import tw.app.hotshots.fragment.link_manager.model.Link
 import tw.app.hotshots.settings.Settings
+import tw.app.hotshots.util.FileUtil
 import tw.app.hotshots.util.TimeUtil
 import tw.app.hotshots.util.UidGenerator
+import tw.app.hotshots.util.UriUtil
 
 class AddLinkDialog(
     context: Context,
@@ -20,6 +28,7 @@ class AddLinkDialog(
 
     private val binding = DialogEditLinkBinding.inflate(LayoutInflater.from(context))
     private val settings = Settings.getInstance
+    private var imageFilePath = ""
 
     init {
         binding.editLinkTitle.text = "Dodaj Odnośnik"
@@ -33,6 +42,21 @@ class AddLinkDialog(
             dismiss()
         }
 
+        binding.linkImage.setOnClickListener {
+            val mainActivity = (context as MainActivity)
+
+            mainActivity.shouldUploadToDatabase = false
+            mainActivity.setAvatarPickerListener(object : AvatarPickerListener {
+                override fun onCropped(croppedBitmap: Bitmap) {
+                    super.onCropped(croppedBitmap)
+                    var file = FileUtil.saveBitmapAsFile(context, croppedBitmap)
+                    imageFilePath = UriUtil(context).getPath(Uri.fromFile(file))!!
+                }
+            })
+
+            mainActivity.pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
         binding.saveButton.setOnClickListener {
             val link = Link(
                 id = UidGenerator.Generate(12),
@@ -41,6 +65,9 @@ class AddLinkDialog(
                 createdAt = TimeUtil.currentTimeToLong(),
                 lastModifiedAt = TimeUtil.currentTimeToLong()
             )
+
+            if (imageFilePath.isNotBlank())
+                link.imageUrl = imageFilePath
 
             listener.onAdded(link)
             dismiss()

@@ -15,4 +15,3 @@ pluginManagement {
 rootProject.name = "HotShots"
 include ':app'
 include ':dotsindicator'
-include ':hshotadmin'

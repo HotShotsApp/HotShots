@@ -2,12 +2,11 @@ package tw.app.hotshots.adapter.recyclerview
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import tw.app.hotshots.databinding.ItemLinkBinding
-import tw.app.hotshots.databinding.ItemPostBinding
 import tw.app.hotshots.fragment.link_manager.model.Link
 import tw.app.hotshots.ui.link.EditLinkDialog
 import tw.app.hotshots.ui.link.EditLinkListener
@@ -28,6 +27,14 @@ class LinksAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val binding = holder.binding
         val link = mData[position]
+
+        if (link.imageUrl.isNotBlank()) {
+            binding.linkImageHolder.visibility = VISIBLE
+
+            Picasso.get()
+                .load(link.imageUrl)
+                .into(binding.linkImage)
+        }
 
         binding.linkTitleText.text = link.title
         binding.linkUrlText.text = link.url
