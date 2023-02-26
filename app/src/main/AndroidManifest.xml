@@ -19,6 +19,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:restoreAnyVersion="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/HotShots.ActionBar"
@@ -73,6 +74,9 @@
             android:theme="@style/Theme.HotShots" />
         <activity
             android:name=".activity.posts.BigPictureSlideActivity"
+            android:theme="@style/Theme.HotShots" />
+        <activity
+            android:name=".activity.notifications.NotificationsActivity"
             android:theme="@style/Theme.HotShots" />
     </application>
 </manifest>

@@ -14,6 +14,12 @@ object TimeUtil {
         return format.format(date)
     }
 
+    fun convertLongToTime(time: Long, pattern: String): String {
+        val date = Date(time)
+        val format = SimpleDateFormat(pattern, Locale.getDefault())
+        return format.format(date)
+    }
+
     fun currentTimeToLong(): Long {
         return System.currentTimeMillis()
     }

@@ -18,6 +18,7 @@ import tw.app.hotshots.activity.auth.AuthActivity
 import tw.app.hotshots.authentication.Biometric
 import tw.app.hotshots.authentication.BiometricStatusListener
 import tw.app.hotshots.authentication.model.User
+import tw.app.hotshots.database.notifications.SendNotification
 import tw.app.hotshots.database.user.UserSingleton
 import tw.app.hotshots.database.user.UserDatabase
 import tw.app.hotshots.database.user.UserDatabaseListener
@@ -50,6 +51,8 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
     private lateinit var passwordChangePref: Preference
     private lateinit var banTestPref: Preference
     private lateinit var biometricPref: SwitchPreferenceCompat
+    private lateinit var testNotificationPref: Preference
+    private lateinit var testRejectNotificationPref: Preference
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.settings_screen)
@@ -66,6 +69,8 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
         logout = findPreference("logoutButton")!!
         banTestPref = findPreference("banTestButton")!!
         biometricPref = findPreference("isBiometricEnabled")!!
+        testNotificationPref = findPreference("testNotificationButton")!!
+        testRejectNotificationPref = findPreference("testRejectNotificationButton")!!
 
         _biometric = Biometric(requireActivity(), requireContext())
         biometric.checkBiometricStatus(object : BiometricStatusListener {
@@ -189,6 +194,49 @@ class SettingsFragment : PreferenceFragmentCompat(), CoroutineScope {
                         Toast.makeText(requireContext(), exception.message, Toast.LENGTH_LONG).show()
                     }
                 }).saveUser(user)
+            }
+
+            false
+        }
+
+        testNotificationPref.setOnPreferenceClickListener {
+            launch {
+                SendNotification
+                    .send(
+                        UserSingleton.instance?.user!!.uid,
+                        SendNotification.fastDefaultNotification("Witaj!", "Witaj w HotShots!"),
+                        object : SendNotification.OnNotificationSendListener {
+                            override fun onSent() {
+                                requireActivity().finish()
+                            }
+
+                            override fun onError(reason: String) {
+                                Toast.makeText(requireContext(), reason, Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    )
+            }
+
+            false
+        }
+
+        testRejectNotificationPref.setOnPreferenceClickListener {
+            launch {
+                SendNotification.SendInfluDeclinedNotification(
+                    UserSingleton.instance?.user?.uid!!,
+                    "Test",
+                    "Testowe powiadomienie!\n\nDecyzja:\nModerator (Test)",
+                    object : SendNotification.OnNotificationSendListener {
+                        override fun onSent() {
+                            requireActivity().finish()
+                        }
+
+                        override fun onError(reason: String) {
+                            Toast.makeText(requireContext(), reason, Toast.LENGTH_LONG)
+                                .show()
+                        }
+                    }
+                )
             }
 
             false

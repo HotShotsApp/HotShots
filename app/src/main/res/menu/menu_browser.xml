@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/save_to_links_button" android:title="Zapisz Odnośnik" />
+
+    <item android:id="@+id/exit_button" android:title="Wyjdź" />
 </menu>

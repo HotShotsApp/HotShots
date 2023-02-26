@@ -20,14 +20,13 @@ import androidx.navigation.ui.setupWithNavController
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
-import com.torrydo.floatingbubbleview.FloatingBubbleService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tw.app.hotshots.app.HotShots
 import tw.app.hotshots.R
-import tw.app.hotshots.activity.debug.DebugService
+import tw.app.hotshots.activity.notifications.NotificationsActivity
 import tw.app.hotshots.databinding.ActivityMainBinding
 import tw.app.hotshots.databinding.ContentMainBinding
 import tw.app.hotshots.settings.SettingsActivity
@@ -136,8 +135,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
         buildLoadingDialog()
 
-        debugService = Intent(this@MainActivity, DebugService::class.java)
-
         _binding = ActivityMainBinding.inflate(layoutInflater)
         _content = binding.mainContentInclude
         setContentView(binding.root)
@@ -183,16 +180,11 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
                 true
             }
-            R.id.notifications_button -> true
-            R.id.debug_button -> {
-                if (FloatingBubbleService.isRunning()) {
-                    stopService(debugService)
-                } else {
-                    startService(debugService)
 
-                    if (Build.VERSION.SDK_INT >= 26)
-                        startForegroundService(debugService)
-                }
+            R.id.notifications_button -> {
+                val intent = Intent(this@MainActivity, NotificationsActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
 
                 true
             }

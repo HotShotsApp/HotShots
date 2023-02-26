@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".activity.browser.BrowserActivity">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/browser_swipe"
@@ -13,11 +15,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <WebView
+        <tw.app.hotshots.ui.browser.HotWebView
             android:id="@+id/browser_webview"
             android:layout_width="match_parent"
-            android:layout_height="0dp" />
+            android:layout_height="0dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_view"
+        style="@style/Widget.Material3.LinearProgressIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/bottom_view" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottom_view"
@@ -67,30 +78,18 @@
                 android:id="@+id/url_text_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:focusedByDefault="false"
                 android:gravity="left|center"
-                android:textSize="14sp"
+                android:imeOptions="actionSearch"
+                android:inputType="textUri"
                 android:maxLines="1"
                 android:minLines="1"
-                android:inputType="textUri"
-                android:imeOptions="actionSearch"
-                android:focusedByDefault="false"
-                android:background="@color/transparent"
                 android:text="https://facebook.com/"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/progress_view"
-                app:layout_constraintStart_toEndOf="@id/fav_icon_image"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/progress_view"
-                style="@style/Widget.Material3.CircularProgressIndicator.ExtraSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                android:indeterminate="true"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/more_button"
-                app:layout_constraintStart_toEndOf="@id/url_text_view"
+                app:layout_constraintStart_toEndOf="@id/fav_icon_image"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.button.MaterialButton
@@ -100,19 +99,8 @@
                 android:layout_height="wrap_content"
                 app:icon="@drawable/ic_more_vert_wb"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/close_button"
-                app:layout_constraintStart_toEndOf="@id/progress_view"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/close_button"
-                style="@style/Widget.Material3.Button.IconButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/ic_close_wb"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/more_button"
+                app:layout_constraintStart_toEndOf="@id/url_text_view"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

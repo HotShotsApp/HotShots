@@ -1,13 +1,17 @@
 package tw.app.hotshots.adapter.recyclerview
 
 import android.content.Context
+import android.net.Uri
 import android.view.LayoutInflater
+import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
+import tw.app.hotshots.R
 import tw.app.hotshots.databinding.ItemLinkBinding
 import tw.app.hotshots.fragment.link_manager.model.Link
+import tw.app.hotshots.settings.Settings
 import tw.app.hotshots.ui.link.EditLinkDialog
 import tw.app.hotshots.ui.link.EditLinkListener
 
@@ -17,6 +21,9 @@ class LinksAdapter(
     private var editLinkListener: EditLinkListener // To Listen for changes in CreateLinkFragment
 ) : RecyclerView.Adapter<LinksAdapter.ViewHolder>() {
     private var listener: LinkClickListener? = null
+
+    val settings = Settings(context)
+
     inner class ViewHolder(val binding: ItemLinkBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LinksAdapter.ViewHolder {
@@ -31,9 +38,17 @@ class LinksAdapter(
         if (link.imageUrl.isNotBlank()) {
             binding.linkImageHolder.visibility = VISIBLE
 
-            Picasso.get()
-                .load(link.imageUrl)
-                .into(binding.linkImage)
+            if (settings.isPrivateLinkViewEnabled()) {
+                Picasso.get()
+                    .load(R.drawable.private_image)
+                    .into(binding.linkImage)
+            } else {
+                Picasso.get()
+                    .load(Uri.parse(link.imageUrl))
+                    .into(binding.linkImage)
+            }
+        } else {
+            binding.linkImageHolder.visibility = GONE
         }
 
         binding.linkTitleText.text = link.title
@@ -46,7 +61,7 @@ class LinksAdapter(
 
         binding.root.setOnClickListener {
             if (listener != null) {
-                listener?.onClicked(link)
+                listener?.onClicked(link, position)
             }
         }
     }
@@ -90,5 +105,5 @@ class LinksAdapter(
 }
 
 interface LinkClickListener {
-    fun onClicked(link: Link)
+    fun onClicked(link: Link, position: Int)
 }

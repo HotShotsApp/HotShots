@@ -8,6 +8,13 @@
             android:title="Ukryj obrazy postów"
             android:summary="Ukryj obrazy podczas przeglądania wszystkich postów. (Wymaga restartu)"
             android:defaultValue="false" />
+
+        <SwitchPreferenceCompat
+            android:key="isPrivateLinkViewEnabled"
+            android:icon="@drawable/ic_private_image_wb"
+            android:title="Ukryj obrazy odnośników"
+            android:summary="Ukryj obrazy podczas przeglądania odnośników. (Wymaga restartu)"
+            android:defaultValue="false" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Bezpieczeństwo">
@@ -42,6 +49,15 @@
             android:key="isLinkTitleAutoCompleteEnabled"/>
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="Przeglądarka">
+        <EditTextPreference
+            android:key="defaultWebPage"
+            android:icon="@drawable/ic_public_24_wb"
+            android:title="Domyślna strona"
+            android:defaultValue="https://www.google.pl/"
+            android:summary="Wpisz adres strony, która ma się domyślnie pojawiać po otwarciu przeglądarki"/>
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="Konto">
         <Preference
             android:key="logoutButton"
@@ -52,8 +68,20 @@
     <PreferenceCategory android:title="Debug">
         <Preference
             android:key="banTestButton"
-            android:icon="@drawable/ic_timer_24_wb"
+            android:icon="@drawable/ic_settings_24_wb"
             android:title="Zbanuj"
             android:summary="Zbanuj siebie na 10 sekund"/>
+
+        <Preference
+            android:key="testNotificationButton"
+            android:icon="@drawable/ic_settings_24_wb"
+            android:title="Powiadomienie"
+            android:summary="Wyślij testowe powiadomienie"/>
+
+        <Preference
+            android:key="testRejectNotificationButton"
+            android:icon="@drawable/ic_settings_24_wb"
+            android:title="Powiadomienie (Odrzucone)"
+            android:summary="Wyślij testowe powiadomienie (odrzucony influencer z powodem)"/>
     </PreferenceCategory>
 </PreferenceScreen>

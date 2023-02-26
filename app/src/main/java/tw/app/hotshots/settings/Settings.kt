@@ -10,11 +10,17 @@ class Settings(context: Context) {
     private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private val editor: SharedPreferences.Editor = preferences.edit()
 
+    // KEYS
     private val IS_LINK_TITLE_AUTO_COMPLETE_ENABLED = "isLinkTitleAutoCompleteEnabled"
     private val IS_PRIVATE_VIEW_ENABLED = "isPrivateViewEnabled"
     private val IS_WARNING_ABOUT_IN_APP_BROWSER_READED = "isWarningAboutInAppBrowserReaded"
     private val IS_USER_FIRST_RUN = "isUserFirstRun"
     private val IS_BIOMETRIC_ENABLED = "isBiometricEnabled"
+    private val IS_PRIVATE_LINK_VIEW_ENABLED = "isPrivateLinkViewEnabled"
+    private val DEFAULT_WEB_PAGE = "defaultWebPage"
+
+    // DEFAULT VALUES
+    private val DEFAULT_WEB_PAGE_DEFVALUE = "https://www.google.com/"
 
     fun isLinkTitleAutoCompleteEnabled(): Boolean {
         return getBoolean(IS_LINK_TITLE_AUTO_COMPLETE_ENABLED, true)
@@ -46,6 +52,22 @@ class Settings(context: Context) {
         setBoolean(IS_BIOMETRIC_ENABLED, value)
     }
 
+    fun isPrivateLinkViewEnabled(): Boolean {
+        return getBoolean(IS_PRIVATE_LINK_VIEW_ENABLED, false)
+    }
+
+    fun setPrivateLinkViewEnabled(value: Boolean) {
+        setBoolean(IS_PRIVATE_LINK_VIEW_ENABLED, value)
+    }
+
+    fun getDefaultWebSite(): String {
+        return getString(DEFAULT_WEB_PAGE, DEFAULT_WEB_PAGE_DEFVALUE)
+    }
+
+    fun setDefaultWebSite(url: String) {
+        setString(DEFAULT_WEB_PAGE, url)
+    }
+
     /**
      * Warning
      *
@@ -61,6 +83,14 @@ class Settings(context: Context) {
 
     private fun setBoolean(key: String, value: Boolean) {
         editor.putBoolean(key, value).apply()
+    }
+
+    private fun getString(key: String, defValue: String): String {
+        return preferences.getString(key, defValue) ?: defValue
+    }
+
+    private fun setString(key: String, value: String) {
+        editor.putString(key, value).apply()
     }
 
     companion object {

@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 import tw.app.hotshots.activity.AvatarPickerListener
 import tw.app.hotshots.database.influencers.AddInfluencer
 import tw.app.hotshots.database.influencers.AddInfluencerListener
+import tw.app.hotshots.database.notifications.SendNotification
 import tw.app.hotshots.database.user.UserSingleton
 import tw.app.hotshots.databinding.ActivityAddInfluencerBinding
 import tw.app.hotshots.model.main.Influencer
@@ -216,6 +217,22 @@ class AddInfluencerActivity : AppCompatActivity(), CoroutineScope {
                             "Wysłano! Decyzje dostaniesz w powiadomieniu.",
                             Toast.LENGTH_LONG
                         ).show()
+
+                        launch {
+                            SendNotification.SendInfluSentNotification(
+                                userUID = UserSingleton.instance?.user?.uid!!,
+                                influencerNick = influencer.nickname,
+                                listener = null
+                            )
+
+                            SendNotification.SendInfluAcceptedNotification(
+                                userUID = UserSingleton.instance?.user?.uid!!,
+                                influencerNick = influencer.nickname,
+                                influencerUid = influencer.uid,
+                                listener = null
+                            )
+                        }
+
                         loading.dismiss()
                         _loading = null
                         finish()

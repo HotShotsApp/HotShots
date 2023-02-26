@@ -3,9 +3,11 @@ package tw.app.hotshots.fragment.link_manager
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import tw.app.hotshots.fragment.link_manager.model.Link
+import tw.app.hotshots.util.FileUtil
 
 class LinkManager(
     private val context: Context,
@@ -66,15 +68,48 @@ class LinkManager(
     }
 
     fun removeAll() {
-        edit.putString(LINKS, "").apply()
-        save()
+        edit.putString(LINKS, "").commit()
     }
 
-    fun getLinks(): MutableList<Link> {
+    fun isBackupAvailable(): Boolean {
+        return FileUtil.isLinkBackupAvailable(context)
+    }
+
+    fun removeBackup() {
+        FileUtil.removeLinkBackupFile(context)
+    }
+
+    suspend fun getLinks(listener: GetLinksListener) {
         if (getString(LINKS).isNotBlank())
             linksList = Gson().fromJson(getString(LINKS), tokenType)
 
-        return linksList
+        listener.onReceived(linksList)
+    }
+
+    fun backupWrite(listener: FileUtil.OnWriteToFileListener) {
+        FileUtil.writeLinkBackupToFile(
+            getString(LINKS),
+            context,
+            listener
+        )
+    }
+
+    fun backupRestore() {
+        var listenerFile = object : FileUtil.OnReadFromFileListener {
+            override fun onSuccess(content: String) {
+                setString(LINKS, content)
+                Toast.makeText(context, "Pomyślnie przywrócono!", Toast.LENGTH_LONG).show()
+            }
+
+            override fun onError(reason: String) {
+                Toast.makeText(context, reason, Toast.LENGTH_LONG).show()
+            }
+        }
+
+        FileUtil.readLinkBackupFromFile(
+            context,
+            listenerFile
+        )
     }
 
     private fun sort() {
@@ -88,6 +123,14 @@ class LinkManager(
     private fun getString(key: String): String {
         return preferences.getString(key, "").toString()
     }
+
+    private fun setString(key: String, value: String) {
+        edit.putString(key, value).commit()
+    }
+}
+
+interface GetLinksListener {
+    fun onReceived(links: MutableList<Link>)
 }
 
 interface LinkManagerListener {

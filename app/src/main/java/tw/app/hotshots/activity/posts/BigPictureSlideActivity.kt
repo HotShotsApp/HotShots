@@ -1,6 +1,11 @@
 package tw.app.hotshots.activity.posts
 
+import android.animation.Animator
 import android.os.Bundle
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.CoroutineScope
@@ -94,6 +99,46 @@ class BigPictureSlideActivity : AppCompatActivity(), CoroutineScope {
         binding.imagesViewPager.adapter = adapter
 
         binding.viewpagerIndicator.attachTo(binding.imagesViewPager)
+    }
+
+    /**
+     * The [value] boolean should be True if input should be enabled or False when disabled
+     */
+    fun toggleViewPagerInput(value: Boolean) {
+        binding.imagesViewPager.isUserInputEnabled = value
+
+        if (!value) {
+            binding.viewpagerIndicator.animate()
+                .setDuration(300)
+                .setInterpolator(DecelerateInterpolator())
+                .alpha(0f)
+                .setListener(object : Animator.AnimatorListener {
+
+                    override fun onAnimationStart(animation: Animator) {
+
+                    }
+
+                    override fun onAnimationEnd(animation: Animator) {
+                        binding.viewpagerIndicator.visibility = GONE
+                    }
+
+                    override fun onAnimationCancel(animation: Animator) {
+
+                    }
+
+                    override fun onAnimationRepeat(animation: Animator) {
+
+                    }
+                })
+                .start()
+        } else {
+            binding.viewpagerIndicator.visibility = VISIBLE
+            binding.viewpagerIndicator.animate()
+                .setDuration(300)
+                .setInterpolator(AccelerateInterpolator())
+                .alpha(1f)
+                .start()
+        }
     }
 
     override fun onDestroy() {

@@ -6,6 +6,7 @@ import android.net.Uri
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.View.GONE
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.result.PickVisualMediaRequest
@@ -22,9 +23,9 @@ import tw.app.hotshots.util.UidGenerator
 import tw.app.hotshots.util.UriUtil
 
 class AddLinkDialog(
-    context: Context,
+    private val contextActivity: Context,
     private val listener: AddLinkListener
-) : BottomSheetDialog(context) {
+) : BottomSheetDialog(contextActivity) {
 
     private val binding = DialogEditLinkBinding.inflate(LayoutInflater.from(context))
     private val settings = Settings.getInstance
@@ -37,24 +38,35 @@ class AddLinkDialog(
         setup()
     }
 
+    fun hideImageView() {
+        binding.linkImageHolder.visibility = GONE
+        binding.removeImageButton.visibility = GONE
+    }
+
     private fun setup() {
         binding.closeDialogButton.setOnClickListener {
             dismiss()
         }
 
-        binding.linkImage.setOnClickListener {
-            val mainActivity = (context as MainActivity)
+        binding.linkImageHolder.setOnClickListener {
+            val mainActivity = (contextActivity as MainActivity)
 
             mainActivity.shouldUploadToDatabase = false
             mainActivity.setAvatarPickerListener(object : AvatarPickerListener {
                 override fun onCropped(croppedBitmap: Bitmap) {
                     super.onCropped(croppedBitmap)
+                    binding.linkImage.setImageBitmap(croppedBitmap)
                     var file = FileUtil.saveBitmapAsFile(context, croppedBitmap)
-                    imageFilePath = UriUtil(context).getPath(Uri.fromFile(file))!!
+                    imageFilePath = Uri.fromFile(file).toString()
                 }
             })
 
             mainActivity.pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
+        binding.removeImageButton.setOnClickListener {
+            imageFilePath = ""
+            binding.linkImage.setImageDrawable(null)
         }
 
         binding.saveButton.setOnClickListener {

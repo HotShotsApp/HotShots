@@ -8,6 +8,8 @@ import android.widget.Toast
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
+import com.liulishuo.filedownloader.FileDownloader
+import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection
 import tw.app.hotshots.BuildConfig
 import tw.app.hotshots.R
 import tw.app.hotshots.activity.MainActivity
@@ -34,6 +36,16 @@ class HotShots : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        FileDownloader.setup(this)
+
+        /*FileDownloader.setupOnApplicationOnCreate(this)
+            .connectionCreator(FileDownloadUrlConnection
+                .Creator(FileDownloadUrlConnection.Configuration()
+                    .connectTimeout(15_000)
+                    .readTimeout(15_000)
+                ))
+            .commit()*/
 
         // Initialize Logger
         Logger.initialize(this)

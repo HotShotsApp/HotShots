@@ -2,6 +2,9 @@
 <resources>
     <color name="black_white_inverse">#FFF</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="black_white_inverse_opaque">#99FFFFFF</color>
+
+    <color name="text_opaque">#99000000</color>
 
     <color name="surface_color">?colorSurface</color>
 

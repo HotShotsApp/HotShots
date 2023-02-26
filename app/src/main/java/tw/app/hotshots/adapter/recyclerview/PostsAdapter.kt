@@ -29,7 +29,7 @@ import tw.app.hotshots.model.main.Post
  * Adapter that shows available Posts
  *
  * @param mData MutableList with Posts
- * @param fragmentManager of ViewPager Host - needed to show post images
+ * @param fragmentManager of ViewPager Host - needed to show Posts images
  * @param lifecycle  of ViewPager Host - needed to show post images
  */
 class PostsAdapter(
@@ -59,7 +59,7 @@ class PostsAdapter(
         holder.binding.likesPostAmountText.addCharOrder(CharOrder.Number)
         holder.binding.likesPostAmountText.animationInterpolator = OvershootInterpolator()
 
-        holder.binding.root.setOnClickListener {
+        holder.binding.contentHolder?.setOnClickListener {
             if (isClickListenerAvailable())
                 onPostClickListener!!.onClick(post.uid)
         }
@@ -72,8 +72,7 @@ class PostsAdapter(
         val popup = PopupMenu(context, holder.binding.postMoreButton)
         popup.inflate(R.menu.menu_post)
 
-        if (post.userUid == currentUserUid)
-            popup.menu.findItem(R.id.remove_post_button).isVisible = true
+        popup.menu.findItem(R.id.remove_post_button).isVisible = post.userUid == currentUserUid
 
         popup.setOnMenuItemClickListener {
             if (it.itemId == R.id.remove_post_button) {
@@ -157,7 +156,7 @@ class PostsAdapter(
         onPostClickListener = _listener
     }
 
-    fun isClickListenerAvailable(): Boolean {
+    private fun isClickListenerAvailable(): Boolean {
         return onPostClickListener != null
     }
 

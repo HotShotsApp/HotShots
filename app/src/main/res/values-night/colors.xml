@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black_white_inverse">@color/material_dynamic_secondary30</color>
+    <color name="black_white_inverse_opaque">#99000000</color>
+
+    <color name="text_opaque">#99FFFFFF</color>
 
     <color name="surface_color">?colorSurface</color>
 </resources>
