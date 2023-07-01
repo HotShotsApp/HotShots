@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Filmy">
+
+        <CheckBoxPreference
+            android:key="isAutoplayEnabled"
+            android:title="Autoodtwarzanie"
+            android:summary="Automatycznie odtwarzaj filmy"
+            android:defaultValue="true"/>
+
+        <EditTextPreference
+            android:key="slowMotionSpeed"
+            android:dialogMessage="Wpisz wartość między 0.1 - 0.9"
+            android:defaultValue="0.3"
+            android:title="Zwolnione Tempo"
+            android:summary="Kliknij aby zmienić prędkość odtwarzania wideo podczas włączonego trybu slow-motion"/>
+    </PreferenceCategory>
+</PreferenceScreen>
