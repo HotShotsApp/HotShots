@@ -9,11 +9,7 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 class DeviceID {
-
-    /**
-     * To get BluetoothAdapter:
-     * context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-     */
+    
     @SuppressLint("HardwareIds")
     public fun getUniqueDeviceID(bluetoothManager: BluetoothManager): String {
         val password = bluetoothManager.adapter.address.toString()

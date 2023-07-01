@@ -13,6 +13,7 @@ data class HotUser(
 
     var isBanned: Boolean = false,
     var banReason: String = "",
+    var bannedBy: String = "",
     var bannedAt: Long = 0,
     var bannedTo: Long = 0,
 

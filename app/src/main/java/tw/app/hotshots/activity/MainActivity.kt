@@ -1,23 +1,21 @@
 package tw.app.hotshots.activity
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.isVisible
 import androidx.navigation.ui.setupWithNavController
+import kotlinx.coroutines.launch
 import tw.app.hotshots.R
 import tw.app.hotshots.authentication.Authentication
 import tw.app.hotshots.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -40,6 +38,19 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         binding.mainContent.navigationRailView.setupWithNavController(navController)
+
+        init()
+        setup()
+    }
+
+    private fun init() {
+
+    }
+
+    private fun setup() {
+        launch {
+
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
