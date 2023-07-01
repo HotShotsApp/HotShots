@@ -19,3 +19,8 @@ Działanie niektórych funkcji lub wygląd aplikacji może się zmienić.
 ## Kompilacja
 Pobierz kod źródłowy używając Git w Android Studio, do poprawnej kompilacji potrzebujesz plik *google-services.json*, który musisz umieścić w */HotShots/app* - taki plik możesz wygenerować [tutaj](https://firebase.google.com/)
 ###### Potrzebna jest również poprawna konfiguracja Firebase aby aplikacja funkcjonowała poprawnie!
+
+## Dokumentacja
+**POLISH/POLSKI**
+
+- [Banowanie użytkowników](https://github.com/HotShotsApp/HotShots/blob/master/docs-pl/BANOWANIE.md)
