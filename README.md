@@ -3,9 +3,7 @@
 
 ###### W razie pytań:
 
-| Napisz do dewelopera                                       | Zapytaj na serwerze                                                                     |
-|---------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
-| ![](https://dcbadge.vercel.app/api/shield/1070652559628456016?theme=gray) | [![](https://dcbadge.vercel.app/api/server/ZPuJ3Axbdf?theme=gray)](https://discord.gg/ZPuJ3Axbdf) |
+[![](https://dcbadge.vercel.app/api/server/ZPuJ3Axbdf?theme=gray)](https://discord.gg/ZPuJ3Axbdf)
 
 ## O aplikacji
 #### <b>Aplikacja może zawierać zdjęcia, filmy lub odnośniki do materiałów przeznaczonych dla osób pełnoletnich _+18_</b>
