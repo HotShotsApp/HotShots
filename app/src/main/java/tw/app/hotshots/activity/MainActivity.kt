@@ -1,5 +1,6 @@
 package tw.app.hotshots.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 import tw.app.hotshots.R
 import tw.app.hotshots.authentication.Authentication
 import tw.app.hotshots.databinding.ActivityMainBinding
+import tw.app.hotshots.settings.SettingsActivity
 
 class MainActivity : BaseActivity() {
 
@@ -74,7 +76,11 @@ class MainActivity : BaseActivity() {
                 true
             }
 
-            R.id.action_settings -> true
+            R.id.action_settings -> {
+                var intent: Intent? = Intent(this@MainActivity, SettingsActivity::class.java)
+                startActivity(intent)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

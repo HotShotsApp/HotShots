@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
     <application
         android:name=".HotShots"
@@ -31,6 +32,10 @@
         <activity
             android:name=".activity.MainActivity"
             android:theme="@style/Theme.HotShots" />
+
+        <activity android:name=".settings.SettingsActivity" />
+
+        <activity android:name=".activity.UpdateActivity" />
 
         <activity android:name=".activity.LicenseActivity" />
     </application>

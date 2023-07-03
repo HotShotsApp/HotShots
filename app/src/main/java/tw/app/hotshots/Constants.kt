@@ -14,4 +14,9 @@ object Constants {
     object Documents {
         public val VERSION: String = "VERSION"
     }
+
+    object ImageCompression {
+        public val MINIMUM = 600
+        public val MAXIMUM = 320
+    }
 }

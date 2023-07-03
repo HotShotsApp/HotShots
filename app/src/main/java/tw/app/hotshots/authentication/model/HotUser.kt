@@ -8,6 +8,7 @@ data class HotUser(
     var email: String,
     var description: String = "Jeszcze nie ustaliłem opisu...",
     var avatar: String = "default",
+    var deviceID: String = "",
 
     var createdAt: Long = 0,
 
@@ -48,6 +49,7 @@ data class HotUser(
         email = "",
         description = "Jeszcze nie ustaliłem opisu...",
         avatar = "default",
+        deviceID = "",
         isBanned = false,
         banReason = "",
         bannedAt = 0,

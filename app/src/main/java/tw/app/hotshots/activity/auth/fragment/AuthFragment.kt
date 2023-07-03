@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
@@ -20,9 +21,13 @@ import tw.app.hotshots.database.ban.CheckBanDevice
 import tw.app.hotshots.database.ban.CheckBanDeviceListener
 import tw.app.hotshots.database.nicknames.NickCheckListener
 import tw.app.hotshots.database.nicknames.NickNames
+import tw.app.hotshots.database.register.RegisterValidate
+import tw.app.hotshots.database.register.RegisterValidateListener
+import tw.app.hotshots.database.register.VALIDATION_TYPE_FAIL
 import tw.app.hotshots.databinding.FragmentAuthBinding
 import tw.app.hotshots.extensions.hideKeyboard
 import tw.app.hotshots.fragment.BaseFragment
+import tw.app.hotshots.logger.Logger
 import tw.app.hotshots.util.DeviceID
 import tw.app.hotshots.util.TimeUtil
 import kotlin.system.exitProcess
@@ -130,70 +135,63 @@ class AuthFragment : BaseFragment() {
     }
 
     private fun init() {
+        binding.usernameEditText.addTextChangedListener {
+            if (binding.usernameTextInputLayout.isErrorEnabled) {
+                binding.usernameTextInputLayout.error = ""
+                binding.usernameTextInputLayout.isErrorEnabled = false
+            }
+        }
+
         binding.doneButton.setOnClickListener {
             if (validate()) {
                 launch {
                     if (isRegister) {
-                        // If user try to register, first check if username he choose is available:
-                        NickNames().checkIfNicknameAvailable(
+                        Logger("AuthFragment").LogI("Register", "Starting registering...")
+                        Logger("AuthFragment").LogI("Register", "Checking if user can register...")
+
+                        var contentResolver = requireActivity().contentResolver
+                        RegisterValidate().Validate(
                             binding.usernameEditText.text.toString(),
-                            object : NickCheckListener {
-                                override fun onAvailable() {
-                                    // If username is available, check if device is banned
-                                    requireActivity().runOnUiThread {
-                                        binding.usernameTextInputLayout.error = ""
-                                        binding.usernameTextInputLayout.isErrorEnabled = false
-                                    }
-
-                                    // Check if device is banned
+                            DeviceID().getUniqueDeviceID(contentResolver),
+                            object : RegisterValidateListener {
+                                override fun onSuccess() {
                                     launch {
-                                        CheckBanDevice().checkIfDeviceIsBanned(
-                                            DeviceID().getUniqueDeviceID(
-                                                requireContext().getSystemService(
-                                                    Context.BLUETOOTH_SERVICE
-                                                ) as BluetoothManager
-                                            ), object : CheckBanDeviceListener {
-                                                override fun onResult(isBanned: Boolean) {
-                                                    if (isBanned) {
-                                                        // If is banned, notify user.
-                                                        val dialog = MaterialAlertDialogBuilder(
-                                                            requireContext()
-                                                        )
-                                                            .setTitle("Urządzenie zablokowane!")
-                                                            .setMessage("Urządzenie nie może zostać użyte do założenia nowego konta w HotShots, ponieważ zostało ono zablokowane za naruszenie regulaminu aplikacji! Poczekaj na odblokowanie lub skontaktuj się z administracją na serwerze Discord.")
-                                                            .setPositiveButton(
-                                                                "Zamknij"
-                                                            ) { _, _ -> exitProcess(0) }
-                                                            .setCancelable(false)
-                                                            .create()
-
-                                                        dialog.setCancelable(false)
-                                                        dialog.setCanceledOnTouchOutside(false)
-                                                        dialog.show()
-                                                    } else {
-                                                        // If is not banned, register user.
-                                                        launch {
-                                                            authentication.register(
-                                                                binding.emailEditText.text.toString(),
-                                                                binding.usernameEditText.text.toString(),
-                                                                binding.passwordEditText.text.toString()
-                                                            )
-                                                        }
-                                                    }
-                                                }
-
-                                                override fun onError(exception: Exception) {
-
-                                                }
-                                            })
+                                        authentication.register(
+                                            binding.emailEditText.text.toString(),
+                                            binding.usernameEditText.text.toString(),
+                                            binding.passwordEditText.text.toString(),
+                                            contentResolver
+                                        )
                                     }
                                 }
 
-                                override fun onTaken() {
+                                override fun onFailed(reason: VALIDATION_TYPE_FAIL) {
                                     requireActivity().runOnUiThread {
-                                        binding.usernameTextInputLayout.error =
-                                            "Nazwa jest już zajęta!"
-                                        binding.usernameTextInputLayout.isErrorEnabled = true
+                                        when (reason) {
+                                            VALIDATION_TYPE_FAIL.USERNAME_NOT_AVAILABLE -> {
+                                                binding.usernameTextInputLayout.error =
+                                                    "Nazwa jest już zajęta!"
+                                                binding.usernameTextInputLayout.isErrorEnabled =
+                                                    true
+                                            }
+
+                                            VALIDATION_TYPE_FAIL.DEVICE_BANNED -> {
+                                                val dialog = MaterialAlertDialogBuilder(
+                                                    requireContext()
+                                                )
+                                                    .setTitle("Urządzenie zablokowane!")
+                                                    .setMessage("Urządzenie nie może zostać użyte do założenia nowego konta w HotShots, ponieważ zostało ono zablokowane za naruszenie regulaminu aplikacji! Poczekaj na odblokowanie lub skontaktuj się z administracją na serwerze Discord.")
+                                                    .setPositiveButton(
+                                                        "Zamknij"
+                                                    ) { _, _ -> exitProcess(0) }
+                                                    .setCancelable(false)
+                                                    .create()
+
+                                                dialog.setCancelable(false)
+                                                dialog.setCanceledOnTouchOutside(false)
+                                                dialog.show()
+                                            }
+                                        }
                                     }
                                 }
 

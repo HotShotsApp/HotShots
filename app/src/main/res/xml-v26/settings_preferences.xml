@@ -34,10 +34,10 @@
             android:title="Autoodtwarzanie" />
 
         <SeekBarPreference
-            android:defaultValue="5"
+            android:defaultValue="5.0"
             android:key="slowMotionSpeed"
             android:max="8"
-            app:min="1"
+            android:min="1"
             android:summary="Prędkość odtwarzania wideo podczas włączonego trybu slow-motion. Wartość jest dzielona przez 10."
             android:title="Zwolnione Tempo"
             app:showSeekBarValue="true" />

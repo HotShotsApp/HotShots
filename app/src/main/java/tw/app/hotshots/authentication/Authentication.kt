@@ -1,5 +1,7 @@
 package tw.app.hotshots.authentication
 
+import android.bluetooth.BluetoothManager
+import android.content.ContentResolver
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.tasks.await
 import tw.app.hotshots.authentication.model.HotUser
@@ -9,6 +11,7 @@ import tw.app.hotshots.database.users.GetUser
 import tw.app.hotshots.database.users.GetUserListener
 import tw.app.hotshots.logger.Logger
 import tw.app.hotshots.singleton.UserSingleton
+import tw.app.hotshots.util.DeviceID
 import tw.app.hotshots.util.TimeUtil
 import java.lang.Exception
 
@@ -62,13 +65,14 @@ class Authentication(
         }
     }
 
-    public suspend fun register(email: String, username: String, password: String) {
+    public suspend fun register(email: String, username: String, password: String, contentResolver: ContentResolver) {
         var wasLastActionSuccessful = true
         var hotUser = HotUser(
             uid = "",
             name = username,
             email = email,
-            createdAt = TimeUtil.currentTimeToLong()
+            createdAt = TimeUtil.currentTimeToLong(),
+            deviceID = DeviceID().getUniqueDeviceID(contentResolver)
         )
 
         val dummy = FirebaseAuth.getInstance()

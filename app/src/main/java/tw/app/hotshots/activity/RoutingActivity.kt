@@ -128,38 +128,45 @@ class RoutingActivity : BaseActivity() {
             CheckVersion().invoke(object : CheckVersionListener {
                 override fun onChecked(isUpdateAvailable: Boolean, newVersion: Version?) {
                     launch {
-                        if (isUpdateAvailable) {
-                            var message =
-                                "Dostępna jest aktualizacja do wersji ${newVersion!!.version} w etapie ${newVersion.state.name}."
-                            if (newVersion.required)
-                                message =
-                                    "$message Ta aktualizacja jest wymagana aby korzystać z aplikacji!"
+                        runOnUiThread {
+                            if (isUpdateAvailable) {
+                                var message =
+                                    "Dostępna jest aktualizacja do wersji ${newVersion!!.version} w etapie ${newVersion.state.name}."
+                                if (newVersion.required)
+                                    message =
+                                        "$message Ta aktualizacja jest wymagana aby korzystać z aplikacji!"
 
-                            val dialogMaterial = MaterialAlertDialogBuilder(this@RoutingActivity)
-                                .setTitle("Aktualizacja")
-                                .setMessage(message)
-                                .setNegativeButton("Aktualizuj") { _, _ -> redirect(NEXT_PAGE.UPDATE_ACTIVITY) }
+                                val dialogMaterial =
+                                    MaterialAlertDialogBuilder(this@RoutingActivity)
+                                        .setTitle("Aktualizacja")
+                                        .setMessage(message)
+                                        .setNegativeButton("Aktualizuj") { _, _ ->
+                                            redirect(
+                                                NEXT_PAGE.UPDATE_ACTIVITY
+                                            )
+                                        }
 
-                            if (!newVersion.required) {
-                                dialogMaterial.setPositiveButton(
-                                    "Pomiń"
-                                ) { _, _ ->
-                                    redirect(nextActivity)
+                                if (!newVersion.required) {
+                                    dialogMaterial.setPositiveButton(
+                                        "Pomiń"
+                                    ) { _, _ ->
+                                        redirect(nextActivity)
+                                    }
+
+                                    dialogMaterial.setOnDismissListener {
+                                        redirect(nextActivity)
+                                    }
+
+                                    dialogMaterial.show()
+                                } else {
+                                    val dialog = dialogMaterial.create()
+                                    dialog.setCanceledOnTouchOutside(false)
+                                    dialog.setCancelable(false)
+                                    dialog.show()
                                 }
-
-                                dialogMaterial.setOnDismissListener {
-                                    redirect(nextActivity)
-                                }
-
-                                dialogMaterial.show()
                             } else {
-                                val dialog = dialogMaterial.create()
-                                dialog.setCanceledOnTouchOutside(false)
-                                dialog.setCancelable(false)
-                                dialog.show()
+                                redirect(nextActivity)
                             }
-                        } else {
-                            redirect(nextActivity)
                         }
                     }
                 }
